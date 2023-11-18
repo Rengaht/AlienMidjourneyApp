@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+  font-family: monospace;
+}
+
+.fullscreen{
+  @apply fixed top-0 left-0 right-0 bottom-0;
+  @apply bg-cover bg-no-repeat bg-center;
+  @apply flex justify-center items-center;
+}
+
+.vbutton{
+  @apply bg-lightgray text-white px-2 flex-1;
+}
+textarea{
+  @apply border-[1px] border-white p-2;
+  resize: none;
+}
