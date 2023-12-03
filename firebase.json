@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "source": "vite",
+    "public": "vite/dist",
     "ignore": [
       "firebase.json",
       "**/.*",

@@ -15,8 +15,5 @@ export const STATUS={
 }
 
 
-export const TITLE={
-    '__idle':'PROMPT YOUR INNER ALIENS',
-    
-}
+export const TITLE='PROMPT YOUR INNER ALIENS';
 export const CHECK_INTERVAL=3000;

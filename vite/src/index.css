@@ -1,16 +1,15 @@
+/* @config "../tailwind.config.js"; */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
-
 
 
 @layer base{
 
 body{
   font-family:  'Inter', sans-serif;
-  @apply text-gray;
+  @apply text-[#B4B4B4];
   font-size: 0.75rem;
 }
 h1{
@@ -61,6 +60,9 @@ textarea{
 
   .side{
       @apply bg-back flex-1;
+  }
+  .container{
+    @apply relative px-[1rem] py-[0.8rem] overflow-scroll flex flex-col gap-[0.75rem];
   }
 
   .hint{

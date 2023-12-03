@@ -152,28 +152,30 @@ function App() {
 
   return (
     <div className="main">
-        <Manual>
-          <button className="absolute top-[-3rem] left-[1rem] vbutton" onClick={restart}>restart</button>        
-        </Manual>
+        <button className="absolute top-[3.88rem] left-[2.88rem] vbutton" onClick={restart}>restart</button>        
+        <Manual status={status}/>
         <div className='flex flex-col gap-1 relative'>
-          <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE[status]}</h1>
+          <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE}</h1>
           <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-2'>
             <div className='w-full aspect-square'>
-              <Template/>
-              <img src={imageSrc}></img>          
+              {imageSrc? <img src={imageSrc}></img>:<Template/>}
+              
             </div>
             {status==STATUS.BUTTONS && buttons && <div className='grid grid-cols-5 gap-[1rem]'>
-                {buttons.map((key, id)=>(<button className="vbutton row-span-1" key={id} onClick={()=>onButton(key)}>{key}</button>))}
+                {buttons.map((key, id)=>(<button className="vbutton row-span-1 !rounded-none" key={id} onClick={()=>onButton(key)}>{key}</button>))}
             </div>}
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-2 gap-2'>
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white' placeholder='enter prompt...' rows={5}/>
-            <button className={`${status==STATUS.IDLE? 'bg-slate-300':'bg-[#00FFC2]'} px-4 rounded-md uppercase`}
+            <button className={`${status==STATUS.IDLE? 'bg-green':'bg-gray'} vbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.BUTTONS}
-                    onClick={onSend}>{ status==STATUS.IDLE ?'send': (status==STATUS.UPLOAD ?'upload':"...") }</button>
+                    onClick={onSend}>{ status==STATUS.IDLE ?'Generate': (status==STATUS.UPLOAD ?'upload':"Processing...") }</button>
           </div>
         </div>
         <Album/>
+        <div className='absolute bottom-0 w-full flex justify-center items-center pb-[1rem] font-bold'>
+          Powered by Midjourney
+        </div>
     </div>
   )
 }
