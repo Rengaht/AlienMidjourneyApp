@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+
+@layer base{
+
+body{
+  font-family:  'Inter', sans-serif;
+  @apply text-gray;
+  font-size: 0.75rem;
+}
+h1{
+  font-family:  'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+}
+h2{
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+h3{
+  font-size: 1rem;
+  font-weight: 700;
+}
+p{
+  /* font-size: 0.75rem; */
+}
+label{
+  font-size: 0.875rem;
+}
+ul{
+  list-style-type:disc;
+  margin-left: 1rem;
+  margin-top: 1rem;
+}
+
+.fullscreen{
+  @apply fixed top-0 left-0 right-0 bottom-0;
+  @apply bg-cover bg-no-repeat bg-center;
+  @apply flex justify-center items-center;
+}
+
+.vbutton{
+  @apply bg-lightgray text-black px-2 flex-1 uppercase;
+  @apply px-[1.2rem] py-[0.31rem] text-[0.75rem] rounded-[0.31rem];
+  font-weight: 700;
+}
+textarea{
+  @apply border-[1px] border-white p-2;
+  resize: none;
+}
+  .main{
+      @apply fullscreen bg-[url('/assets/alien_landscape_v.png')];
+      @apply grid grid-cols-3 justify-center items-stretch gap-[3.38vw];
+      @apply px-[1.87rem] pt-[6.87rem] pb-[4.25rem];
+  }
+
+  .side{
+      @apply bg-back flex-1;
+  }
+
+  .hint{
+    @apply relative h-fit mb-[2rem];
+    font-weight: 700;
+  }
+  .hint p{
+    border: 1.5px solid rgba(255, 255, 255, 0.60);
+    @apply pb-[1rem] p-[0.6rem];
+  }
+  .hint label{
+    @apply absolute top-[0.6rem] left-[0.6rem] right-[0.6rem] bottom-[-50%] bg-[#00FF4766];
+    @apply flex flex-col justify-end items-center text-center;
+    /* display: block; */
+  }
+  .pagination{
+    @apply flex flex-row justify-center gap-[1rem];
+  }
+  .pagination span{
+    @apply rounded-full bg-[rgba(180,180,180,0.5)] w-[0.625rem] h-[0.625rem];
+  }
+
+  .template-image span{
+    @apply w-full aspect-square flex justify-center items-center;
+    @apply bg-[#B4B4B41A];
+    @apply text-[#FFFFFF33];
+  }
+  .template-button div{
+    @apply h-[2.125rem] flex-1;
+    @apply bg-[#B4B4B41A];
+  }
+}

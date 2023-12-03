@@ -1,7 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, CHECK_INTERVAL, STATUS } from './constants';
+import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, CHECK_INTERVAL, STATUS, TITLE } from './constants';
+import Manual from './comps/manual';
+import Album from './comps/album';
+import Template from './comps/template';
 
 
 const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
@@ -18,17 +21,7 @@ function App() {
   const refInput=useRef();
   const refRequest=useRef();
 
-  const headers={
-    "Content-Type": "application/json",
-    "Authorization": `Bearer ${API_TOKEN}`,
-    'ngrok-skip-browser-warning':true,
-  };
-  const config = (url, data, method)=>({
-    method: method || "post",
-    url: url,
-    headers: headers,
-    data: data,
-  });
+ 
   const checkStatus=()=>{
     
     if(!messageId) return;
@@ -36,8 +29,7 @@ function App() {
 
     axios({
       method:"GET",
-      url: `${API_MESSAGE}${messageId}`,
-      headers:headers,
+      url: `${API_MESSAGE}?messageId=${messageId}`,      
     }).then(function (response) {
       let output=response.data;
       console.log(output);
@@ -87,13 +79,13 @@ function App() {
     let str=refInput.current.value;
     if(str.length<1) return;
     
-    let conf=config(API_IMAGINE, {
-      prompt: str,
-    });
-    console.log(conf);
-
+    
     setStatus(STATUS.GENERATE);
-    axios(conf)
+    axios.post(API_IMAGINE, {
+      data: {
+        prompt:str,
+      },
+    })
     .then(function (response) {
       let output=response.data;
       console.log(output);
@@ -115,10 +107,12 @@ function App() {
 
     setStatus(STATUS.BUTTONS);
 
-    axios(config(API_VARIATION,{
-      messageId: messageId,
-      button:key
-    })).then(function (response) {
+    axios.post(API_VARIATION,{
+      data:{
+        messageId: messageId,
+        button:key
+      }
+    }).then(function (response) {
       let output=response.data;
       console.log(output);
 
@@ -157,27 +151,29 @@ function App() {
   },[]);
 
   return (
-    <div className="fullscreen bg-[url('/assets/alien_landscape_v.png')]">
-      <div className='w-4/5 flex flex-col justify-center items-center gap-4'>
-        <div className='w-full flex flex-row justify-between'>
-          <h2 className='text-[white]'>{status}</h2>
-          <button className="vbutton !flex-none" onClick={restart}>restart</button>
-        </div>
-        <div className='w-[75%] flex flex-col justify-center items-stretch gap-2 bg-gray p-2'>
-          <div className='w-full flex-1 aspect-square'>
-            <img src={imageSrc}></img>          
+    <div className="main">
+        <Manual>
+          <button className="absolute top-[-3rem] left-[1rem] vbutton" onClick={restart}>restart</button>        
+        </Manual>
+        <div className='flex flex-col gap-1 relative'>
+          <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE[status]}</h1>
+          <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-2'>
+            <div className='w-full aspect-square'>
+              <Template/>
+              <img src={imageSrc}></img>          
+            </div>
+            {status==STATUS.BUTTONS && buttons && <div className='grid grid-cols-5 gap-[1rem]'>
+                {buttons.map((key, id)=>(<button className="vbutton row-span-1" key={id} onClick={()=>onButton(key)}>{key}</button>))}
+            </div>}
           </div>
-          {status==STATUS.BUTTONS && buttons && <div className='grid grid-cols-5 gap-1'>
-              {buttons.map((key, id)=>(<button className="vbutton row-span-1" key={id} onClick={()=>onButton(key)}>{key}</button>))}
-          </div>}
+          <div className='w-full bg-back flex flex-col justify-center items-center p-2 gap-2'>
+            <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white' placeholder='enter prompt...' rows={5}/>
+            <button className={`${status==STATUS.IDLE? 'bg-slate-300':'bg-[#00FFC2]'} px-4 rounded-md uppercase`}
+                    disabled={status!=STATUS.IDLE && status!=STATUS.BUTTONS}
+                    onClick={onSend}>{ status==STATUS.IDLE ?'send': (status==STATUS.UPLOAD ?'upload':"...") }</button>
+          </div>
         </div>
-        <div className='w-full bg-gray flex flex-col justify-center items-center p-2 gap-2'>
-          <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white' placeholder='enter prompt...' rows={5}/>
-          <button className={`${status==STATUS.IDLE? 'bg-slate-300':'bg-[#00FFC2]'} px-4 rounded-md uppercase`}
-                  disabled={status!=STATUS.IDLE && status!=STATUS.BUTTONS}
-                  onClick={onSend}>{ status==STATUS.IDLE ?'send': (status==STATUS.UPLOAD ?'upload':"...") }</button>
-        </div>
-      </div>
+        <Album/>
     </div>
   )
 }
