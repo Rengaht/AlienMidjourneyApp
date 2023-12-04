@@ -5,9 +5,9 @@ import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, CHECK_INTERVAL, STA
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template from './comps/template';
+import { fetchToBlob, uploadStorage } from './utils';
 
-
-const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
+// const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
 
 function App() {
@@ -38,8 +38,8 @@ function App() {
       if(output.uri) setImageSrc(output.uri);
       if(output.progress) setProgress(output.progress);
       if(output.buttons) setButtons(output.buttons);
-
-      if(!output.uri){
+      
+      if(output.progress!=100){
         
         if(refRequest.current) clearTimeout(refRequest.current);
 
@@ -48,7 +48,7 @@ function App() {
         },CHECK_INTERVAL); 
 
       }else{
-        if(output.buttons.includes("U1")) setStatus(val=>STATUS.BUTTONS);
+        if(output.buttons?.includes("U1")) setStatus(val=>STATUS.BUTTONS);
         else
           setStatus(val=>STATUS.UPLOAD);
       }
@@ -67,7 +67,7 @@ function App() {
       case STATUS.IDLE:
         generate();
         break;
-      case STATUS.BUTTONS:
+      case STATUS.UPLOAD:
         upload();
         break;
 
@@ -99,9 +99,30 @@ function App() {
     });
 
   } 
-
+  const getFileName=()=>{
+    let str=refInput.current.value;
+    str=str.replace(/\n/g, " ");
+    return str.replace(/\s/g, '_');
+  }
   const upload=()=>{
-    setStatus(STATUS.UPLOAD);
+
+    if(!imageSrc) return;
+    
+    fetchToBlob(imageSrc).then(blob=>{
+
+      if(!blob) return;
+      console.log(blob.size, blob.type);
+
+      uploadStorage(blob, getFileName()).then(res=>{
+        console.log(res);
+        setTimeout(()=>{
+          console.log('back to idle');
+          // setStatus(val=>STATUS.IDLE);
+          restart();
+        },3000);
+      });  
+    });
+    
   }
   const onButton=(key)=>{
 
@@ -167,12 +188,12 @@ function App() {
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-2 gap-2'>
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white' placeholder='enter prompt...' rows={5}/>
-            <button className={`${status==STATUS.IDLE? 'bg-green':'bg-gray'} vbutton`}
-                    disabled={status!=STATUS.IDLE && status!=STATUS.BUTTONS}
+            <button className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} vbutton`}
+                    disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
                     onClick={onSend}>{ status==STATUS.IDLE ?'Generate': (status==STATUS.UPLOAD ?'upload':"Processing...") }</button>
           </div>
         </div>
-        <Album/>
+        <Album tmp={imageSrc}/>
         <div className='absolute bottom-0 w-full flex justify-center items-center pb-[1rem] font-bold'>
           Powered by Midjourney
         </div>

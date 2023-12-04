@@ -7,7 +7,7 @@ const Manual=({status, ...props})=>{
     
     // let status=STATUS.UPLOAD;
 
-    if(status==STATUS.IDLE)
+    if(status==STATUS.IDLE || status==STATUS.GENERATE || status==STATUS.PROCESSING_GENERATE)
         return (
             <div className={__style}>
                 {props.children}

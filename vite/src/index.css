@@ -16,6 +16,7 @@ h1{
   font-family:  'DM Sans', sans-serif;
   font-weight: 700;
   font-size: 2rem;
+  letter-spacing: 0.1rem;
 }
 h2{
   font-size: 1.5rem;
@@ -53,7 +54,7 @@ textarea{
   resize: none;
 }
   .main{
-      @apply fullscreen bg-[url('/assets/alien_landscape_v.png')];
+      @apply fullscreen bg-[url('/assets/bg.png')];
       @apply grid grid-cols-3 justify-center items-stretch gap-[3.38vw];
       @apply px-[1.87rem] pt-[6.87rem] pb-[4.25rem];
   }

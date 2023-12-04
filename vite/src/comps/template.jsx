@@ -3,8 +3,8 @@ export const Pagination=({page, total, ...props})=>{
     return (
         <div className="pagination flex-1 items-end">
             {[...Array(total).keys()].map(k=>{
-                if(k==page) return <span className="!bg-gray"></span>;
-                return <span/>;
+                if(k==page) return <span key={k} className="!bg-gray"></span>;
+                return <span key={k}/>;
             })}
         </div>
     );
