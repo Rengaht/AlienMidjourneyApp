@@ -1,5 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL} from "firebase/storage";
+import { getDatabase, ref as db_ref, set, onValue  } from "firebase/database";
+
 import Moment from "moment";
 
 const firebaseConfig = {
@@ -15,6 +17,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 const storage = getStorage(app);
+const database = getDatabase(app);
 
 
 
@@ -23,8 +26,12 @@ async function uploadStorage(file, name){
     let timestr=Moment().format( "YYYYMMDDhhmm" );
     const storageRef = ref(storage, `${timestr}__${name}.png`);
     let snapshot=await uploadBytes(storageRef, file);
-    console.log('Uploaded a blob or file!', snapshot.dataURItoBlob);
-    return 'ok';
+    
+    console.log('Uploaded a blob or file!', snapshot);
+    
+    let url=await getDownloadURL(ref(storage, snapshot.ref.name));
+       
+    return url;
 }
 
 function dataURItoBlob(dataURI) {
@@ -63,16 +70,31 @@ async function listFiles(){
     let output=[];
 
     let res=await listAll(listRef);
-    
+
     let len=res.items.length;
     for(var i=0;i<len;++i){
         let itemRef=res.items[i];
+        // console.log(itemRef);
         let url=await getDownloadURL(ref(storage, itemRef.name));
-        output.push(url);
+        output.unshift(url);
     };
-    
+    // console.log(output);
     return output;
 }
 
+function selectFile(file){
 
-export {uploadStorage, dataURItoBlob, fetchToBlob, listFiles};
+    set(db_ref(database, 'current'), {
+      url: file,
+    });
+}
+
+function selectListener(callback){
+    const starCountRef = db_ref(database, 'current');
+    onValue(starCountRef, (snapshot) => {
+        const data = snapshot.val();
+        callback(data);
+    });
+}
+
+export {uploadStorage, dataURItoBlob, fetchToBlob, listFiles, selectFile, selectListener};

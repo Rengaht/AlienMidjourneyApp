@@ -95,4 +95,8 @@ textarea{
     @apply h-[2.125rem] flex-1;
     @apply bg-[#B4B4B41A];
   }
+
+  .select{
+    @apply border-[1px] border-green;
+  }
 }

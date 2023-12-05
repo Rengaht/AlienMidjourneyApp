@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, CHECK_INTERVAL, STATUS, TITLE } from './constants';
+import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, BUCKET_URL, CHECK_INTERVAL, STATUS, TITLE } from './constants';
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template from './comps/template';
-import { fetchToBlob, uploadStorage } from './utils';
+import { fetchToBlob, selectFile, uploadStorage } from './utils';
 
 // const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
@@ -115,6 +115,8 @@ function App() {
 
       uploadStorage(blob, getFileName()).then(res=>{
         console.log(res);
+        selectFile(res);
+
         setTimeout(()=>{
           console.log('back to idle');
           // setStatus(val=>STATUS.IDLE);
@@ -168,6 +170,8 @@ function App() {
     restart();
     // refInput.current.value=tmp_prompt;
     // setButtons(tmp_buttons);
+    
+    // upload();
 
   },[]);
 
