@@ -177,22 +177,26 @@ function App() {
 
   return (
     <div className="main">
-        <button className="absolute top-[3.88rem] left-[2.88rem] vbutton" onClick={restart}>restart</button>        
+        <button className="absolute top-[3.88rem] left-[2.88rem] cbutton" onClick={restart}>restart</button>        
         <Manual status={status}/>
-        <div className='flex flex-col gap-1 relative'>
+        <div className='flex flex-col gap-[1rem] relative'>
           <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE}</h1>
-          <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-2'>
-            <div className='w-full aspect-square'>
-              {imageSrc? <img src={imageSrc}></img>:<Template/>}
+          <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[1.69rem]'>
+            <Template src={imageSrc} buttons={buttons} status={status}
+                onClick={(key)=>{
+                  if(status==STATUS.BUTTONS) onButton(key)
+                }}/>
+            {/* <div className='w-full aspect-square'>
+              {imageSrc? <img src={imageSrc}></img>:<Template src={imageSrc}/>}
               
             </div>
             {status==STATUS.BUTTONS && buttons && <div className='grid grid-cols-5 gap-[1rem]'>
                 {buttons.map((key, id)=>(<button className="vbutton row-span-1 !rounded-none" key={id} onClick={()=>onButton(key)}>{key}</button>))}
-            </div>}
+            </div>} */}
           </div>
-          <div className='w-full bg-back flex flex-col justify-center items-center p-2 gap-2'>
-            <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white' placeholder='enter prompt...' rows={5}/>
-            <button className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} vbutton`}
+          <div className='w-full bg-back flex flex-col justify-center items-center p-[0.6rem] gap-[0.75rem]'>
+            <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem]' placeholder='enter prompt...' rows={5}/>
+            <button className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
                     onClick={onSend}>{ status==STATUS.IDLE ?'Generate': (status==STATUS.UPLOAD ?'upload':"Processing...") }</button>
           </div>

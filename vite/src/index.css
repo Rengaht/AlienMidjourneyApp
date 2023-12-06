@@ -45,9 +45,14 @@ ul{
 }
 
 .vbutton{
-  @apply bg-lightgray text-black px-2 flex-1 uppercase;
-  @apply px-[1.2rem] py-[0.31rem] text-[0.75rem] rounded-[0.31rem];
-  font-weight: 700;
+  @apply !bg-lightgray text-black uppercase flex justify-center items-center text-center;
+  @apply text-[1.125rem] font-bold cursor-pointer;
+}
+.cbutton{
+  @apply bg-lightgray text-black uppercase flex justify-center items-center text-center;
+  @apply text-[0.75rem] font-bold;
+  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem];
+  
 }
 textarea{
   @apply border-[1px] border-white p-2;
@@ -55,7 +60,7 @@ textarea{
 }
   .main{
       @apply fullscreen bg-[url('/assets/bg.png')];
-      @apply grid grid-cols-3 justify-center items-stretch gap-[3.38vw];
+      @apply grid grid-cols-3 justify-center items-stretch gap-[4rem];
       @apply px-[1.87rem] pt-[6.87rem] pb-[4.25rem];
   }
 
