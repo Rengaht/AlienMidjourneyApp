@@ -9,8 +9,9 @@
 
 body{
   font-family:  'Inter', sans-serif;
-  @apply text-[#B4B4B4];
+  @apply text-[#B4B4B4] bg-black;
   font-size: 0.75rem;
+  
 }
 h1{
   font-family:  'DM Sans', sans-serif;
@@ -39,7 +40,7 @@ ul{
 }
 
 .fullscreen{
-  @apply fixed top-0 left-0 right-0 bottom-0;
+  @apply absolute top-0 left-0 right-0;
   @apply bg-cover bg-no-repeat bg-center;
   @apply flex justify-center items-center;
 }
@@ -62,6 +63,11 @@ textarea{
       @apply fullscreen bg-[url('/assets/bg.png')];
       @apply grid grid-cols-3 justify-center items-stretch gap-[4rem];
       @apply px-[1.87rem] pt-[6.87rem] pb-[4.25rem];
+      @apply min-w-[1200px] min-h-[100vh];
+  }
+  #root{
+    overflow-x: auto;
+    @apply absolute top-0 left-0 right-0 bottom-0;
   }
 
   .side{
@@ -78,6 +84,7 @@ textarea{
   .hint p{
     border: 1.5px solid rgba(255, 255, 255, 0.60);
     @apply pb-[1rem] p-[0.6rem];
+    @apply relative z-10;
   }
   .hint label{
     @apply absolute top-[0.6rem] left-[0.6rem] right-[0.6rem] bottom-[-50%] bg-[#00FF4766];
