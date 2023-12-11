@@ -6,6 +6,9 @@ import Manual from './comps/manual';
 import Album from './comps/album';
 import Template from './comps/template';
 import { fetchToBlob, selectFile, uploadStorage } from './utils';
+import { gsap } from 'gsap';
+
+gsap.registerPlugin(TextPlugin);
 
 // const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
@@ -20,8 +23,22 @@ function App() {
 
   const refInput=useRef();
   const refRequest=useRef();
+  const refDot=useRef();
 
- 
+  const getButtonText=()=>{
+    switch(status){
+      case STATUS.IDLE:
+        return 'Generate';
+      case STATUS.UPLOAD:
+        return 'upload';
+      case STATUS.PROCESSING_BUTTONS:
+      case STATUS.BUTTONS:
+        return "Waiting...";
+      case STATUS.PROCESSING_GENERATE:
+      default:
+        return "Processing...";
+    }
+  }
   const checkStatus=()=>{
     
     if(!messageId) return;
@@ -158,12 +175,32 @@ function App() {
   useEffect(()=>{
     
     console.log(status);
+    if(refDot.current) refDot.current.kill();
+
     switch(status){
       case STATUS.PROCESSING_GENERATE:
+      // default:
+        checkStatus();
+
+        // animation
+        
+        let dot=gsap.timeline({repeat:-1});
+        let due=0.4;
+        dot.to("#_main_button", {text:"processing", duration:due});
+        dot.to("#_main_button", {text:"processing.", duration:due});
+        dot.to("#_main_button", {text:"processing..", duration:due});
+        dot.to("#_main_button", {text:"processing...", duration:due});
+        dot.play();
+
+        refDot.current=dot;
+        break;
       case STATUS.PROCESSING_BUTTONS:
-          checkStatus();
-          break;
+        checkStatus();
+        break;
     }
+
+    
+   
   },[status, messageId]);
   useEffect(()=>{
     
@@ -196,9 +233,9 @@ function App() {
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-[0.6rem] gap-[0.75rem]'>
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem]' placeholder='enter prompt...' rows={5}/>
-            <button className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
+            <button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
-                    onClick={onSend}>{ status==STATUS.IDLE ?'Generate': (status==STATUS.UPLOAD ?'upload':"Processing...") }</button>
+                    onClick={onSend}>{getButtonText()}</button>
           </div>
         </div>
         <Album tmp={imageSrc}/>

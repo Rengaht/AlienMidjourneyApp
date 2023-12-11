@@ -52,7 +52,7 @@ ul{
 .cbutton{
   @apply bg-lightgray text-black uppercase flex justify-center items-center text-center;
   @apply text-[0.75rem] font-bold;
-  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem];
+  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem] w-[8rem];
   
 }
 textarea{
@@ -63,7 +63,7 @@ textarea{
       @apply fullscreen bg-[url('/assets/bg.png')];
       @apply grid grid-cols-3 justify-center items-stretch gap-[4rem];
       @apply px-[1.87rem] pt-[6.87rem] pb-[4.25rem];
-      @apply min-w-[1200px] min-h-[100vh];
+      @apply min-w-[1200px] h-[100vh];
   }
   #root{
     overflow-x: auto;
