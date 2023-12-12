@@ -31,9 +31,9 @@ function App() {
         return 'Generate';
       case STATUS.UPLOAD:
         return 'upload';
-      case STATUS.PROCESSING_BUTTONS:
       case STATUS.BUTTONS:
         return "Waiting...";
+      case STATUS.PROCESSING_BUTTONS:
       case STATUS.PROCESSING_GENERATE:
       default:
         return "Processing...";
@@ -179,7 +179,8 @@ function App() {
 
     switch(status){
       case STATUS.PROCESSING_GENERATE:
-      // default:
+      case STATUS.PROCESSING_BUTTONS:
+          // default:
         checkStatus();
 
         // animation
@@ -194,9 +195,7 @@ function App() {
 
         refDot.current=dot;
         break;
-      case STATUS.PROCESSING_BUTTONS:
-        checkStatus();
-        break;
+      
     }
 
     
