@@ -213,7 +213,7 @@ function App() {
 
   return (
     <div className="main">
-        <button className="absolute top-[3.88rem] left-[2.88rem] cbutton" onClick={restart}>restart</button>        
+        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>restart</button>        
         <Manual status={status}/>
         <div className='flex flex-col gap-[1rem] relative'>
           <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE}</h1>
@@ -238,7 +238,7 @@ function App() {
           </div>
         </div>
         <Album tmp={imageSrc}/>
-        <div className='absolute bottom-0 w-full flex justify-center items-center pb-[1rem] font-bold'>
+        <div className='footer'>
           Powered by Midjourney
         </div>
     </div>

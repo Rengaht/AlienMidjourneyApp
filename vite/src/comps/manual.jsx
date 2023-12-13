@@ -62,15 +62,15 @@ const Manual=({status, ...props})=>{
     return (
         <div className={`${__style} text-[1rem] items-center !gap-[1.5rem] text-center`}>
             <h3 className="!self-start !text-left">Upscale & Variations of your inner aliens</h3>
-            <ImageTemplate className="w-[13.375rem] !gap-[0.5rem] !text-[2.5rem] mt-[4.25rem] mb-[2.5rem]"/>
+            <ImageTemplate className="w-[13.375rem] !gap-[0.5rem] !text-[2.5rem] mt-[1.25rem] mb-[1.25rem]"/>
 
-            <ButtonTemplate className="w-[68%] mt-[1rem]" buttons={['U1','U2','U3','U4']}/>
+            <ButtonTemplate className="w-[68%] mt-[0.25rem]" buttons={['U1','U2','U3','U4']}/>
             <p>Click the U button for the image you wish to upscale.</p>
 
-            <ButtonTemplate className="w-[68%] mt-[1rem]" buttons={['V1','V2','V3','V4']}/>
+            <ButtonTemplate className="w-[68%] mt-[0.25rem]" buttons={['V1','V2','V3','V4']}/>
             <p>Click the V button for the image you wish to create variations.</p>
 
-            <p className="mt-[1rem] text-[1.25rem]">🔄</p>
+            <p className="mt-[0.25rem] text-[1.25rem]">🔄</p>
             <p>Click the 🔄 button for regenerating a new image grid.</p>
 
             <h3 className="">After pressing a button, please wait patiently for another few minutes...</h3>
