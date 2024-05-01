@@ -69,9 +69,10 @@ function DalleTest() {
     axios.post(API_DALLE, {
       data: {
         prompt:str,
-        model: 'dall-e-2',
-        n: 4,
-        size:'256x256',
+        model: 'dall-e-3',
+        n: 1,
+        size:'1024x1024',
+        style:'vivid',
       },
     })
     .then(function (response) {
@@ -79,7 +80,8 @@ function DalleTest() {
       console.log(output);
       if(output.data?.length>0){
         setImageSrc(output.data.map(el=>el.url));
-        setStatus(STATUS.BUTTONS);
+        // setStatus(STATUS.BUTTONS);
+        setStatus(STATUS.UPLOAD);
       }
 
       // if(output.messageId){
@@ -224,9 +226,9 @@ function DalleTest() {
                   if(status==STATUS.BUTTONS) onButton(key)
                 }}/> */}
             <div>
-              <div className='grid grid-cols-2'>
+              {/* <div className='grid grid-cols-2'> */}
                 {imageSrc?.map((src, index)=><img key={index} src={src}/>)}
-              </div>
+              {/* </div> */}
               { status==STATUS.BUTTONS && <>
                 <div className='template-button flex flex-wrap flex-row gap-[0.75rem]'>
                   {['U1','U2','U3','U4'].map((el, index)=><div key={el} onClick={()=>upscale(imageSrc[index])}>{el}</div>)}
