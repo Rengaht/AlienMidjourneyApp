@@ -4,6 +4,9 @@ export const API_IMAGINE="https://us-central1-alienmidjourneyapp.cloudfunctions.
 export const API_MESSAGE="https://us-central1-alienmidjourneyapp.cloudfunctions.net/message";
 export const API_VARIATION="https://us-central1-alienmidjourneyapp.cloudfunctions.net/buttons";
 
+export const API_DALLE='https://us-central1-alienmidjourneyapp.cloudfunctions.net/dalle';
+export const API_DALLE_VARIATION='https://us-central1-alienmidjourneyapp.cloudfunctions.net/dalleVariation';
+
 
 export const STATUS={
     IDLE:'__idle',
@@ -16,6 +19,6 @@ export const STATUS={
 
 
 export const TITLE='PROMPT YOUR INNER ALIENS';
-export const CHECK_INTERVAL=3000;
+export const CHECK_INTERVAL=6000;
 
 export const BUCKET_URL='https://firebasestorage.googleapis.com/v0/b/';

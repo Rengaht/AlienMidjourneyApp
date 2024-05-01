@@ -117,9 +117,10 @@ textarea{
     @apply w-full aspect-square flex justify-center items-center;
     @apply bg-[#B4B4B41A];
     @apply text-[#FFFFFF33];
+    
   }
   .template-button div{
-    @apply h-[2.125rem] flex-1;
+    @apply h-[2.125rem] flex-1 cursor-pointer;
     @apply bg-[#B4B4B41A];
   }
 

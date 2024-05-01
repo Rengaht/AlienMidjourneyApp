@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
+import DalleTest from './DalleTest.jsx'
 import Display from './display.jsx'
 import './index.css'
 
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <App/>,
+  },
+  {
+    path: "/dalle",
+    element: <DalleTest/>,
   },
   {
     path: "/display",
