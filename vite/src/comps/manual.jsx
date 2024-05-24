@@ -39,7 +39,7 @@ const Manual=({status, ...props})=>{
                 </div>
                 <h3 className="mt-[1rem]">Press the ‘Generate’ button to start generating your inner aliens and wait patiently for a few minutes...</h3>
                 
-               <Pagination page={0} total={3}/>
+               <Pagination page={0} total={2}/>
             </div>
         );
 

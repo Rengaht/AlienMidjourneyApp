@@ -59,9 +59,9 @@ ul{
   @apply text-[1.125rem] font-bold cursor-pointer;
 }
 .cbutton{
-  @apply bg-lightgray text-black uppercase flex justify-center items-center text-center;
+  @apply bg-lightgray text-black uppercase flex flex-row justify-center items-center text-center;
   @apply text-[0.75rem] font-bold;
-  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem] w-[8rem];
+  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem];
   
 }
 textarea{
@@ -136,4 +136,31 @@ textarea{
       @apply pb-[1rem];
     }
   }
-}
+
+  .loading {
+    /* font-size: 30px; */
+  }
+  
+  .loading:after {
+    overflow: hidden;
+    display: inline-block;
+    vertical-align: bottom;
+    -webkit-animation: ellipsis steps(4,end) 900ms infinite;      
+    animation: ellipsis steps(4,end) 900ms infinite;
+    content: "\2026"; /* ascii code for the ellipsis character */
+    width: 0px;
+  }
+  
+  @keyframes ellipsis {
+    to {
+      width: 1.25em;    
+    }
+  }
+  
+  @-webkit-keyframes ellipsis {
+    to {
+      width: 1.25em;    
+    }
+  }
+
+} 

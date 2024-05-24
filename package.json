@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "firebase-functions": "^4.9.0"
+  },
+  "scripts": {
+    "deploy":"npm run build --prefix vite && firebase deploy --only hosting "
+  }
+}

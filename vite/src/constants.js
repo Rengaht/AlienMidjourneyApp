@@ -18,7 +18,11 @@ export const STATUS={
 }
 
 
-export const TITLE='PROMPT YOUR INNER ALIENS';
+export const TITLE='Prompt Your Inner Aliens';
+export const TITLE_NL='Prompt Je Inner Aliens';
+
 export const CHECK_INTERVAL=6000;
 
 export const BUCKET_URL='https://firebasestorage.googleapis.com/v0/b/';
+
+export const IDEL_TIMEOUT=10000;

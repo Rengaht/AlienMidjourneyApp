@@ -7,18 +7,23 @@ import './index.css'
 
 import {
   createBrowserRouter,
+  Navigate,
   RouterProvider,
 } from "react-router-dom";
 
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/mj",
     element: <App/>,
   },
   {
-    path: "/dalle",
+    path: "/:lang/:auto?",
     element: <DalleTest/>,
+  },
+  {
+    path: "/",
+    element: <Navigate to="/nl"/>,
   },
   {
     path: "/display",

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_DALLE, API_DALLE_VARIATION, API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, BUCKET_URL, CHECK_INTERVAL, STATUS, TITLE } from './constants';
+import { API_DALLE, API_DALLE_VARIATION, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL } from './constants';
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template, { ButtonTemplate } from './comps/template';
 import { fetchToBlob, selectFile, uploadStorage } from './utils';
 import { gsap } from 'gsap';
+import { useNavigate, useParams } from 'react-router-dom';
+import ManualNL from './comps/manualNL';
 
 gsap.registerPlugin(TextPlugin);
 
@@ -15,37 +17,82 @@ gsap.registerPlugin(TextPlugin);
 
 function DalleTest() {
   
+  const {lang, auto}=useParams();
+  const navigate=useNavigate();
+
   const [status, setStatus]=useState();
   const [messageId, setMessageId]=useState();
   const [imageSrc, setImageSrc]=useState();
   const [progress, setProgress]=useState();
   const [buttons, setButtons]=useState();
+  const [autorun, setAutorun]=useState();
 
   const refInput=useRef();
   const refRequest=useRef();
   const refDot=useRef();
 
+  const refTimeout=useRef();
+  const refAuto=useRef();
+  const refAlbum=useRef();
+  
+  const checkTimeout=()=>{
+    
+    if(auto!='auto') return;
+
+    if(refTimeout.current) clearTimeout(refTimeout.current);
+    refTimeout.current=setTimeout(()=>{
+      // go auto
+      setAutorun(true);
+      console.log('>>>>   auto run  >>>>');      
+      
+    }, IDEL_TIMEOUT);
+  }
+  function checkNext(){
+    
+    if(!refAuto.current) clearTimeout(refAuto.current);
+    refAuto.current=setTimeout(()=>{        
+      refAlbum.current?.selectNext();
+      checkNext();
+    
+    }, IDEL_TIMEOUT);
+    
+  }
+  useEffect(()=>{
+
+    if(autorun){
+      checkNext();
+    }else{
+      console.log('>>>>  stop auto run  >>>>');            
+      clearTimeout(refAuto.current);
+    }
+
+  },[autorun]);
+
   const getButtonText=()=>{
     switch(status){
       case STATUS.IDLE:
-        return 'Generate';
+        if(lang=="nl") return "Genereren";
+        return "Generate";
       case STATUS.UPLOAD:
+        if(lang=='nl') return 'Uploaden';
         return 'upload';
       case STATUS.BUTTONS:
         return "Waiting...";
       case STATUS.PROCESSING_BUTTONS:
       case STATUS.PROCESSING_GENERATE:
       default:
-        return "Processing...";
+        if(lang=='nl') return <span className='loading'>Verwerking</span>;
+        return <span className='loading'>Processing</span>
     }
   }
   
   const onSend=()=>{
-
+    
+    setAutorun(false);
+    
     // variation("https://oaidalleapiprodscus.blob.core.windows.net/private/org-Ig4UjCpC9Ld18JnjgQnF4is0/user-rqcuQgFrHLZxrxZKBTjtlz6N/img-HyUdL4k0QAwa6QT8sA3Muk3Q.png?st=2024-05-01T01%3A23%3A25Z&se=2024-05-01T03%3A23%3A25Z&sp=r&sv=2021-08-06&sr=b&rscd=inline&rsct=image/png&skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2024-04-30T17%3A33%3A25Z&ske=2024-05-01T17%3A33%3A25Z&sks=b&skv=2021-08-06&sig=IQObeVDqtqr%2BGyJQGmNJPm7m9lZ95cbFO0JRE%2BZNoAM%3D");
     // return;
-
-    switch(status){
+   switch(status){
       case STATUS.PROCESSING_BUTTONS:
       case STATUS.PROCESSING_GENERATE:
         return;
@@ -72,7 +119,7 @@ function DalleTest() {
         model: 'dall-e-3',
         n: 1,
         size:'1024x1024',
-        style:'vivid',
+        style:'natural',
       },
     })
     .then(function (response) {
@@ -94,51 +141,7 @@ function DalleTest() {
     });
 
   } 
-  const variation=(img)=>{
-    return;
-    
-    fetchToBlob(img).then(blob=>{
-
-      console.log(blob.size, blob.type);
-
-      let formdata=new FormData();
-    
-      formdata.append('image', blob);
-      // formdata.append('n',4);
-      // formdata.append('size','1024x1024');
-
-      setStatus(STATUS.GENERATE);
-      axios({
-        method:'post',
-        url:API_DALLE_VARIATION, 
-        data:formdata,
-        headers:{
-          'content-type': `multipart/form-data; boundary=${formdata._boundary}`,
-        }
-      })
-      .then(function (response) {
-        let output=response.data;
-        console.log(output);
-        if(output.data?.length>0){
-          setImageSrc(output.data.map(el=>el.url));
-          setStatus(STATUS.BUTTONS);
-        }
-
-      })
-      .catch(function (error) {
-        console.log(error)
-      });
-
-    });
-
-  }
-
-  const upscale=(img)=>{
-    
-    setImageSrc([img]);
-    setStatus(STATUS.UPLOAD);
-
-  }
+  
   const getFileName=()=>{
     let str=refInput.current.value;
     str=str.replace(/\n/g, " ");
@@ -156,6 +159,7 @@ function DalleTest() {
       uploadStorage(blob, getFileName()).then(res=>{
         console.log(res);
         selectFile(res);
+        refAlbum.current.scrollTop=0;
 
         setTimeout(()=>{
           console.log('back to idle');
@@ -173,6 +177,8 @@ function DalleTest() {
     setMessageId();
     setImageSrc();
     refInput.current.value="";
+
+    checkTimeout();
   }
   useEffect(()=>{
     
@@ -199,10 +205,12 @@ function DalleTest() {
         break;
       
     }
-
+    
+    setAutorun(false);
     
    
   },[status, messageId]);
+  
   useEffect(()=>{
     
 
@@ -216,44 +224,39 @@ function DalleTest() {
 
   return (
     <div className="main">
-        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>restart</button>        
-        <Manual status={status}/>
+        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":"Herstarten"}</button>        
+        <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
+          <div onClick={()=>navigate(`/nl${auto?`/${auto}`:''}`)} className={`${lang=='nl'? 'underline':''} cursor-pointer`}>NL</div>
+          /
+          <div onClick={()=>navigate(`/en${auto?`/${auto}`:''}`)} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
+        </div>
+
+        {lang=='en' ? <Manual status={status}/>: <ManualNL status={status}/>}
         <div className='flex flex-col gap-[1rem] relative'>
-          <h1 className='absolute top-[-4rem] w-full uppercase whitespace-nowrap flex justify-center'>{TITLE}</h1>
-          <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[1.69rem]'>
-            {/* <Template src={imageSrc} buttons={buttons} status={status}
-                onClick={(key)=>{
-                  if(status==STATUS.BUTTONS) onButton(key)
-                }}/> */}
-            <div>
-              {/* <div className='grid grid-cols-2'> */}
-                {imageSrc?.map((src, index)=><img key={index} src={src}/>)}
-              {/* </div> */}
-              { status==STATUS.BUTTONS && <>
-                <div className='template-button flex flex-wrap flex-row gap-[0.75rem]'>
-                  {['U1','U2','U3','U4'].map((el, index)=><div key={el} onClick={()=>upscale(imageSrc[index])}>{el}</div>)}
-                </div>
-                <div className='template-button flex flex-wrap flex-row gap-[0.75rem]'>
-                  {['V1','V2','V3','V4'].map((el, index)=><div key={el} onClick={()=>variation(imageSrc[index])}>{el}</div>)}
-                </div>
-                </>}
-            </div>
-            {/* <div className='w-full aspect-square'>
-              {imageSrc? <img src={imageSrc}></img>:<Template src={imageSrc}/>}
-              
-            </div>
-            {status==STATUS.BUTTONS && buttons && <div className='grid grid-cols-5 gap-[1rem]'>
-                {buttons.map((key, id)=>(<button className="vbutton row-span-1 !rounded-none" key={id} onClick={()=>onButton(key)}>{key}</button>))}
-            </div>} */}
+          
+          <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[0.6rem]'>
+            <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-[rgba(255,255,255,0.6)]'>
+              {!imageSrc? (
+                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: TITLE_NL}</div>
+              ):(
+                imageSrc.map((src, index)=><img key={index} src={src}/>)                          
+              )}  
+            </div>          
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-[0.6rem] gap-[0.75rem]'>
-            <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem]' placeholder='enter prompt...' rows={5}/>
+            <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem] border-[rgba(255,255,255,0.6)]' 
+                      placeholder={lang=='en'? 'enter prompt...':"Voer prompts in..."}
+                      rows={5}/>
             <button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
                     onClick={onSend}>{getButtonText()}</button>            
           </div>
         </div>
-        <Album tmp={imageSrc}/>
+        <Album ref={refAlbum} tmp={imageSrc} lang={lang}  
+          onSelect={()=>{
+            setAutorun(false);
+            if(status==STATUS.IDLE) checkTimeout();
+          }}/>
         <div className='footer'>
           Powered by DALL·E
         </div>

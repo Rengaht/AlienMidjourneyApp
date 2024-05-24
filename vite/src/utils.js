@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, listAll, getDownloadURL} from "firebase/storage";
+import { getStorage, ref, uploadBytes, listAll, getDownloadURL, deleteObject} from "firebase/storage";
 import { getDatabase, ref as db_ref, set, onValue  } from "firebase/database";
 
 import Moment from "moment";
@@ -64,7 +64,20 @@ async function fetchToBlob(url){
     
     return blobData;
 }
+async function deleteTestFiles(itemRef){
 
+    if(itemRef.name=='202405240959__test_test_test.png'
+    || itemRef.name=='202405241040__ppppp.png'
+    || itemRef.name=='202405240949__test.png'){
+        try{            
+            let del=await deleteObject(ref(storage, itemRef.name));
+            console.log('delete', itemRef.name, del);
+        }catch(err){
+            console.error(err);
+        }
+
+    }
+}
 async function listFiles(){
     const listRef = ref(storage, '');
     let output=[];
@@ -72,9 +85,14 @@ async function listFiles(){
     let res=await listAll(listRef);
 
     let len=res.items.length;
-    for(var i=0;i<len;++i){
-        let itemRef=res.items[i];
+    let limit=Math.min(len, 102);
+    console.log('total image', len, 'load', limit);
+
+    for(var i=0;i<limit;++i){
+        let itemRef=res.items[len-limit+i];
         // console.log(itemRef);
+
+
         let url=await getDownloadURL(ref(storage, itemRef.name));
         output.unshift(url);
     };
