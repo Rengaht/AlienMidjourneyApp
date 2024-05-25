@@ -70,7 +70,7 @@ textarea{
 }
   .main{
       @apply fullscreen bg-[url('/assets/bg.png')];
-      @apply grid grid-cols-3 justify-center items-stretch gap-[2.5rem];
+      @apply grid grid-cols-3 justify-center items-stretch gap-[1.2rem];
       @apply px-[1.87rem] pt-[5.5rem] pb-[4rem];
       @apply min-w-[1200px] h-[100vh];
   }

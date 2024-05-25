@@ -23,15 +23,20 @@ const database = getDatabase(app);
 
 async function uploadStorage(file, name){
 
-    let timestr=Moment().format( "YYYYMMDDhhmm" );
-    const storageRef = ref(storage, `${timestr}__${name}.png`);
-    let snapshot=await uploadBytes(storageRef, file);
+    try{
     
-    console.log('Uploaded a blob or file!', snapshot);
-    
-    let url=await getDownloadURL(ref(storage, snapshot.ref.name));
-       
-    return url;
+        let timestr=Moment().format( "YYYYMMDDhhmm" );
+        const storageRef = ref(storage, `${timestr}__${name}.png`);
+        let snapshot=await uploadBytes(storageRef, file);
+        
+        console.log('Uploaded a blob or file!', snapshot);
+        
+        let url=await getDownloadURL(ref(storage, snapshot.ref.name));       
+        return url;
+        
+    }catch(err){
+        console.log('upload err',err);
+    }
 }
 
 function dataURItoBlob(dataURI) {
@@ -91,10 +96,12 @@ async function listFiles(){
     for(var i=0;i<limit;++i){
         let itemRef=res.items[len-limit+i];
         // console.log(itemRef);
-
-
-        let url=await getDownloadURL(ref(storage, itemRef.name));
-        output.unshift(url);
+        try{
+            let url=await getDownloadURL(ref(storage, itemRef.name));
+            output.unshift(url);
+        }catch(err){
+            console.log('getDownloadURL err',err);
+        }
     };
     // console.log(output);
     return output;

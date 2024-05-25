@@ -119,7 +119,7 @@ function DalleTest() {
         model: 'dall-e-3',
         n: 1,
         size:'1024x1024',
-        style:'natural',
+        style:'vivid',
       },
     })
     .then(function (response) {
