@@ -43,7 +43,7 @@ const ManualNL=({status, ...props})=>{
             </div>
         );
 
-    if(status==STATUS.UPLOAD){
+    if(status==STATUS.UPLOAD|| status==STATUS.UPLOADED){
         return (
             <div className={`${__style} text-[1rem] items-center text-center !gap-[2rem]`}>
                 <h3 className="!self-start !text-left">Upload je inner aliens</h3>

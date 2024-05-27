@@ -49,6 +49,8 @@ function DalleTest() {
   }
   function checkNext(){
     
+    if(auto!='auto') return;
+
     if(!refAuto.current) clearTimeout(refAuto.current);
     refAuto.current=setTimeout(()=>{        
       refAlbum.current?.selectNext();
@@ -59,6 +61,8 @@ function DalleTest() {
   }
   useEffect(()=>{
 
+    if(auto!='auto') return;
+    
     if(autorun){
       checkNext();
     }else{
@@ -76,6 +80,9 @@ function DalleTest() {
       case STATUS.UPLOAD:
         if(lang=='nl') return 'Uploaden';
         return 'upload';
+      case STATUS.UPLOADED:
+        if(lang=='nl') return 'Geüpload';
+        return 'uploaded';
       case STATUS.BUTTONS:
         return "Waiting...";
       case STATUS.PROCESSING_BUTTONS:
@@ -150,6 +157,8 @@ function DalleTest() {
   const upload=()=>{
 
     if(!imageSrc) return;
+
+    setStatus(STATUS.UPLOADED);
     
     fetchToBlob(imageSrc).then(blob=>{
 

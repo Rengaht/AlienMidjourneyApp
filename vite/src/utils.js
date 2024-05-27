@@ -19,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 const database = getDatabase(app);
 
-
+let history_record={};
 
 async function uploadStorage(file, name){
 
@@ -33,7 +33,7 @@ async function uploadStorage(file, name){
         
         let url=await getDownloadURL(ref(storage, snapshot.ref.name));       
         return url;
-        
+
     }catch(err){
         console.log('upload err',err);
     }
@@ -71,9 +71,13 @@ async function fetchToBlob(url){
 }
 async function deleteTestFiles(itemRef){
 
-    if(itemRef.name=='202405240959__test_test_test.png'
-    || itemRef.name=='202405241040__ppppp.png'
-    || itemRef.name=='202405240949__test.png'){
+    if(itemRef.name=='202405270809__test~~~.png'
+    || itemRef.name=='202405270810__test_2.png'
+    || itemRef.name=='202405270815__test_3.png'
+    || itemRef.name=='202405270816__test4.png'
+    || itemRef.name=='202405270817__test_5.png'
+    || itemRef.name=='202405270818__test_444.png'
+    || itemRef.name=='202405270819__test6_.png'){
         try{            
             let del=await deleteObject(ref(storage, itemRef.name));
             console.log('delete', itemRef.name, del);
@@ -87,6 +91,7 @@ async function listFiles(){
     const listRef = ref(storage, '');
     let output=[];
 
+   
     let res=await listAll(listRef);
 
     let len=res.items.length;
@@ -95,12 +100,24 @@ async function listFiles(){
 
     for(var i=0;i<limit;++i){
         let itemRef=res.items[len-limit+i];
+
+        // deleteTestFiles(itemRef);
+
         // console.log(itemRef);
-        try{
-            let url=await getDownloadURL(ref(storage, itemRef.name));
-            output.unshift(url);
-        }catch(err){
-            console.log('getDownloadURL err',err);
+        if(history_record[itemRef.name]){
+            // console.log('find in history', i);
+            output.unshift(history_record[itemRef.name]);
+        }else{
+            console.log('fetch downalodURL', i);
+            try{
+                let url=await getDownloadURL(ref(storage, itemRef.name));
+                output.unshift(url);
+
+                history_record[itemRef.name]=url;
+
+            }catch(err){
+                console.log('getDownloadURL err',err);
+            }
         }
     };
     // console.log(output);

@@ -10,7 +10,7 @@ const Album=forwardRef(({tmp,lang,onSelect, ...props}, ref)=>{
         listFiles().then(res=>{
             setFiles(res);
         })
-    },[tmp]);
+    },[tmp, select]);
     
     useEffect(()=>{
         

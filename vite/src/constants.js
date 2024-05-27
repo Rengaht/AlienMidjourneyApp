@@ -15,6 +15,7 @@ export const STATUS={
     BUTTONS:'__buttons',
     PROCESSING_BUTTONS:'__processing_buttons',
     UPLOAD:'__upload',
+    UPLOADED:'__uploaded',
 }
 
 
