@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { selectListener } from "./utils";
+import { selectListener } from "../utils";
 import { useControls, button, Leva } from 'leva'
+import { useParams } from "react-router-dom";
 
 const __tag="INNER_ALIEN_PARAMS_DISPLAY";
-const Display=()=>{
+const Single=()=>{
+
+    const { index }=useParams();
+
     const reset=()=>{
         console.log('reset');
         localStorage.removeItem(__tag);
@@ -78,7 +82,7 @@ const Display=()=>{
         
         selectListener((data)=>{
             setCurrent(()=>data);
-        });
+        }, index);
 
         document.addEventListener('keydown', function(event){
             // event.preventDefault();
@@ -102,11 +106,21 @@ const Display=()=>{
 
     return (
         <div className="bg-black absolute top-0 left-0 bottom-0 right-0">
-            <img src={current?.url} className="fixed rounded-full max-w-none" 
-                style={getStlye()} update={update}/>                
+            <div className="fixed flex flex-col py-[0.5rem] justify-between gap-[1.5rem] items-center" style={getStlye()}>
+                <img className="w-[37%]" src="/assets/scale_graphic.png"/>
+                <div className="w-full flex-1 flex justify-center items-center">
+                    <div className="h-full aspect-square bg-center bg-cover bg-no-repeat rounded-full"
+                        style={{backgroundImage:`url(${current?.url})`}}>
+                    {/* <img src={current?.url} className="rounded-full max-w-full" 
+                    update={update}/> */}
+                    </div>
+                </div>
+                <div>{current?.prompt}</div>
+                <img className="w-[46%]"  src="/assets/gradient_graphic.png"/>
+            </div>
             <Leva hidden={!control}/>
         </div>
         
     )
 }
-export default Display;
+export default Single;

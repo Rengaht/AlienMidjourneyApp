@@ -10,6 +10,9 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
+import Workshop from './pages/input.jsx'
+import Compare from './pages/compare.jsx'
+import Single from './pages/single.jsx'
 
 
 const router = createBrowserRouter([
@@ -28,6 +31,17 @@ const router = createBrowserRouter([
   {
     path: "/display",
     element: <Display/>,
+  },
+  {
+    path:"/workshop/:lang",
+    element:<Workshop/> 
+  },
+  {
+    path:"/workshop/compare",
+    element: <Compare/>,
+  },{
+    path:'/workshop/display/:index',
+    element:<Single/>
   }
 ]);
 

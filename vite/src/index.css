@@ -163,4 +163,11 @@ textarea{
     }
   }
 
+  .dot{
+    @apply rounded-full w-[1rem] aspect-square border-[1px] border-white cursor-pointer;
+  }
+  .dot.selected{
+    @apply bg-white;
+  }
+
 } 
