@@ -5,7 +5,7 @@ import { API_IMAGINE, API_MESSAGE, API_TOKEN, API_VARIATION, BUCKET_URL, CHECK_I
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template from './comps/template';
-import { fetchToBlob, selectFile, uploadStorage } from './utils';
+import { fetchToBlob, selectFile, uploadCloudinary, uploadStorage } from './utils';
 import { gsap } from 'gsap';
 
 gsap.registerPlugin(TextPlugin);
@@ -119,8 +119,9 @@ function App() {
   } 
   const getFileName=()=>{
     let str=refInput.current.value;
-    str=str.replace(/\n/g, " ");
-    return str.replace(/\s/g, '_');
+    // str=str.replace(/\n/g, " ");
+    // return str.replace(/\s/g, '_');
+    return str;
   }
   const upload=()=>{
 
@@ -131,15 +132,24 @@ function App() {
       if(!blob) return;
       console.log(blob.size, blob.type);
 
-      uploadStorage(blob, getFileName()).then(res=>{
-        console.log(res);
-        selectFile(res);
+      uploadCloudinary(blob, getFileName(),'inneralien').then(res=>{
+        
+        saveRecords(refInput.current.value, res).then(()=>{
+            
+          console.log(res);
+          selectFile({
+              url: res,
+              prompt: refInput.current.value,
+          });
+          refAlbum.current.scrollTop=0;
 
-        setTimeout(()=>{
-          console.log('back to idle');
-          // setStatus(val=>STATUS.IDLE);
-          restart();
-        },3000);
+          setTimeout(()=>{
+            console.log('back to idle');
+            // setStatus(val=>STATUS.IDLE);
+            restart();
+          },3000);
+        });
+
       });  
     });
     

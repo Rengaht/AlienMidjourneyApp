@@ -8,9 +8,13 @@ const Single=()=>{
 
     const { index }=useParams();
 
+    function getSaveTag(){
+        return `${__tag}_${index}`;
+    }
+
     const reset=()=>{
         console.log('reset');
-        localStorage.removeItem(__tag);
+        localStorage.removeItem(getSaveTag());
 
         let w=window.innerWidth;
         let h=window.innerHeight;
@@ -22,13 +26,13 @@ const Single=()=>{
             radius: r,
             angle: 0,
         };
-        localStorage.setItem(__tag, JSON.stringify(params));
+        localStorage.setItem(getSaveTag(), JSON.stringify(params));
         window.location.reload();
         return params;
     }
     // localStorage.removeItem(__tag);
 
-    let loaded=JSON.parse(localStorage.getItem(__tag));
+    let loaded=JSON.parse(localStorage.getItem(getSaveTag()));
     if(!loaded) loaded=reset();
     // console.log(loaded);
 
@@ -58,7 +62,7 @@ const Single=()=>{
         },
         save: button(()=>{
             console.log(refPos.current);
-            localStorage.setItem(__tag, JSON.stringify({
+            localStorage.setItem(getSaveTag(), JSON.stringify({
                 x: refPos.current.x,
                 y: refPos.current.y,
                 radius: refPos.current.radius,

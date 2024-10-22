@@ -5,6 +5,7 @@ export const API_MESSAGE="https://us-central1-alienmidjourneyapp.cloudfunctions.
 export const API_VARIATION="https://us-central1-alienmidjourneyapp.cloudfunctions.net/buttons";
 
 export const API_DALLE='https://us-central1-alienmidjourneyapp.cloudfunctions.net/dalle';
+// export const API_DALLE='http://127.0.0.1:5001/alienmidjourneyapp/us-central1/dalle'
 export const API_DALLE_VARIATION='https://us-central1-alienmidjourneyapp.cloudfunctions.net/dalleVariation';
 
 

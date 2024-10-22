@@ -5,7 +5,7 @@ import { API_DALLE, API_DALLE_VARIATION, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL }
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template, { ButtonTemplate } from './comps/template';
-import { fetchToBlob, selectFile, uploadStorage } from './utils';
+import { fetchToBlob, selectFile, uploadCloudinary, saveRecords } from './utils';
 import { gsap } from 'gsap';
 import { useNavigate, useParams } from 'react-router-dom';
 import ManualNL from './comps/manualNL';
@@ -165,17 +165,25 @@ function DalleTest() {
       if(!blob) return;
       console.log(blob.size, blob.type);
 
-      uploadStorage(blob, getFileName()).then(res=>{
-        console.log(res);
-        selectFile(res);
-        refAlbum.current.scrollTop=0;
+      uploadCloudinary(blob, getFileName(),'inneralien').then(res=>{
+        
+        saveRecords(refInput.current.value, res).then(()=>{
+            
+          console.log(res);
+          selectFile({
+              url: res,
+              prompt: refInput.current.value,
+          });
+          refAlbum.current.scrollTop=0;
 
-        setTimeout(()=>{
-          console.log('back to idle');
-          // setStatus(val=>STATUS.IDLE);
-          restart();
-        },3000);
-      });  
+          setTimeout(()=>{
+            console.log('back to idle');
+            // setStatus(val=>STATUS.IDLE);
+            restart();
+          },3000);
+        });
+      });
+
     });
     
   }

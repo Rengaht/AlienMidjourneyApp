@@ -26,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <Navigate to="/nl"/>,
+    element: <Navigate to="/en"/>,
   },
   {
     path: "/display",
@@ -35,6 +35,10 @@ const router = createBrowserRouter([
   {
     path:"/workshop/:lang",
     element:<Workshop/> 
+  },
+  {
+    path:"/workshop",
+    element:<Navigate to="/workshop/en"/>,
   },
   {
     path:"/workshop/compare",

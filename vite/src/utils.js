@@ -54,13 +54,14 @@ async function uploadStorage(file, name){
     }
 }
 
-async function uploadCloudinary(file, name){
+async function uploadCloudinary(file, name, folder='inneralien'){
 
     try{
         let url='https://api.cloudinary.com/v1_1/fuyuanmuseum/image/upload';
         let data=new FormData();
         data.append('file', file);
-        data.append('upload_preset', 'inneralien');
+        data.append('upload_preset', folder);
+        data.append('context', `alt=${name}`);
 
         let res=await fetch(url, {
             method: 'POST',
@@ -231,14 +232,14 @@ function selectListener(callback, workshop){
 }
 
 async function saveRecords(prompt, url){
-
-    const docRef = collection(datastore, "records");
-    await addDoc(docRef, {
+    console.log('save record', prompt);
+    const docRef = doc(datastore, "records", new Date().getTime().toString());
+    let res=await setDoc(docRef, {
         prompt: prompt,
         url: url,
         time: Moment().format( "YYYY-MM-DD hh:mm" ),
     });
-    
+    console.log('save record', res);
 }
 
 function getRecords(callback){
@@ -247,7 +248,7 @@ function getRecords(callback){
         
         let output=[];
         snapshot.forEach((doc) => {
-            output.push(doc.data());
+            output.unshift(doc.data());
         });
         console.log('records updated', output);
 

@@ -108,13 +108,14 @@ exports.dalle=functions.runWith(runtimeOpts).https.onRequest(
             
             const data = req.body.data;
             console.log(data);
+            if(!data) return res.status(400).send('No data');
 
             const config = {
                 method: "post",
                 url: `${DALLE_URL}`,
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${OPENAI_KEY}`,
+                    "Authorization": `Bearer ${OPENAI_KEY.value()}`,
                 },
                 data: {
                     "model": data.model || "dall-e-3",
@@ -134,7 +135,7 @@ exports.dalle=functions.runWith(runtimeOpts).https.onRequest(
                 res.send(output);
 
             }catch(err){
-                console.log(err);
+                console.log(err.message);
                 res.send(err);
             }
         });

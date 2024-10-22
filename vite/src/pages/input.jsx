@@ -137,6 +137,8 @@ function Workshop() {
         setImageSrc(output.data.map(el=>el.url));
         // setStatus(STATUS.BUTTONS);
         setStatus(STATUS.UPLOAD);
+      }else{
+        setStatus(STATUS.IDLE);
       }
 
       // if(output.messageId){
@@ -146,14 +148,16 @@ function Workshop() {
     })
     .catch(function (error) {
       console.log(error)
+      setStatus(STATUS.IDLE);
     });
 
   } 
   
   const getFileName=()=>{
     let str=refInput.current.value;
-    str=str.replace(/\n/g, " ");
-    return str.replace(/\s/g, '_');
+    // str=str.replace(/\n/g, " ");
+    // return str.replace(/\s/g, '_');
+    return str;
   }
   const upload=()=>{
 
@@ -166,17 +170,17 @@ function Workshop() {
       if(!blob) return;
       console.log(blob.size, blob.type);
 
-      uploadCloudinary(blob, getFileName()).then(res=>{
+      uploadCloudinary(blob, getFileName(), "workshop").then(res=>{
         
         // save record
 
         saveRecords(refInput.current.value, res).then(()=>{
             
             console.log(res);
-            selectFile({
-                url: res,
-                prompt: refInput.current.value,
-            });
+            // selectFile({
+            //     url: res,
+            //     prompt: refInput.current.value,
+            // });
             refAlbum.current.scrollTop=0;
 
             setTimeout(()=>{
