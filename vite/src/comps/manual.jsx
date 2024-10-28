@@ -54,7 +54,7 @@ const Manual=({status, ...props})=>{
 
                 <p>You can check out others’ aliens in the inner aliens archive on the right side.</p>
 
-                <Pagination page={2} total={3}/>
+                <Pagination page={1} total={2}/>
             </div>
         );
     }

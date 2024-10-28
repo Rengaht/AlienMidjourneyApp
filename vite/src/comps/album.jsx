@@ -28,7 +28,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
         getRecords((data)=>{
             console.log('getRecords', data);
             setFiles(()=>data);
-        });
+        }, workshop);
        
         selectListener((data=>{
             setSelect(()=>data?.url);
@@ -50,7 +50,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
 
     return (
         <div ref={ref} className="side container">
-            <h3 className="!self-start !text-left">{lang=='en'? 'Inner Aliens Archive':'Inner Aliens Archief'}</h3>
+            <h3 className="!self-start !text-left">{lang=='en'? 'Inner Aliens Archive':(lang=='zh'?'內在外星人資料庫':'Inner Aliens Archief')}</h3>
             {/* <button onClick={downalodFiles}>downlaod</button> */}
             <div className="flex-1 overflow-y-scroll overflow-x-hidden">
                 <div className="grid grid-cols-3 gap-[0.5rem]">

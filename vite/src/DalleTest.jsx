@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_DALLE, API_DALLE_VARIATION, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL } from './constants';
+import { API_DALLE, API_UPLOAD, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH } from './constants';
 import Manual from './comps/manual';
 import Album from './comps/album';
 import Template, { ButtonTemplate } from './comps/template';
 import { fetchToBlob, selectFile, uploadCloudinary, saveRecords } from './utils';
 import { gsap } from 'gsap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams,useLocation } from 'react-router-dom';
 import ManualNL from './comps/manualNL';
+import ManualZH from './comps/manualZH';
 
 gsap.registerPlugin(TextPlugin);
 
@@ -19,6 +20,9 @@ function DalleTest() {
   
   const {lang, auto}=useParams();
   const navigate=useNavigate();
+  const location=useLocation();
+  const currentLang=location.state?.currentLang || lang;
+  // console.log(currentLang, lang);
 
   const [status, setStatus]=useState();
   const [messageId, setMessageId]=useState();
@@ -76,12 +80,15 @@ function DalleTest() {
     switch(status){
       case STATUS.IDLE:
         if(lang=="nl") return "Genereren";
+        if(lang=='zh') return "開始生成";
         return "Generate";
       case STATUS.UPLOAD:
         if(lang=='nl') return 'Uploaden';
+        else if(lang=='zh') return '上傳圖片';
         return 'upload';
       case STATUS.UPLOADED:
         if(lang=='nl') return 'Geüpload';
+        else if(lang=='zh') return '成功上傳';
         return 'uploaded';
       case STATUS.BUTTONS:
         return "Waiting...";
@@ -89,6 +96,7 @@ function DalleTest() {
       case STATUS.PROCESSING_GENERATE:
       default:
         if(lang=='nl') return <span className='loading'>Verwerking</span>;
+        else if(lang=='zh') return <span className='loading'>生成中</span>;
         return <span className='loading'>Processing</span>
     }
   }
@@ -160,18 +168,23 @@ function DalleTest() {
 
     setStatus(STATUS.UPLOADED);
     
-    fetchToBlob(imageSrc).then(blob=>{
+    axios.post(API_UPLOAD,{
+      data: {
+        url:imageSrc,
+        folder: "inneralien",
+        name: getFileName(),
+      }
+    }).then(res=>{
 
-      if(!blob) return;
-      console.log(blob.size, blob.type);
+        console.log(res.data);
+        let url=res.data.secure_url || res.data.url;
 
-      uploadCloudinary(blob, getFileName(),'inneralien').then(res=>{
         
-        saveRecords(refInput.current.value, res).then(()=>{
+        saveRecords(refInput.current.value, url).then(()=>{
             
           console.log(res);
           selectFile({
-              url: res,
+              url: url,
               prompt: refInput.current.value,
           });
           refAlbum.current.scrollTop=0;
@@ -182,9 +195,10 @@ function DalleTest() {
             restart();
           },3000);
         });
-      });
-
+    }).catch(err=>{
+      console.log(err);
     });
+
     
   }
   
@@ -241,20 +255,21 @@ function DalleTest() {
 
   return (
     <div className="main">
-        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":"Herstarten"}</button>        
+        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
+        
         <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
-          <div onClick={()=>navigate(`/nl${auto?`/${auto}`:''}`)} className={`${lang=='nl'? 'underline':''} cursor-pointer`}>NL</div>
+        <div onClick={()=>navigate(`/${currentLang}${auto?`/${auto}`:''}`)} className={`${lang==currentLang? 'underline':''} cursor-pointer`}>{currentLang=='zh'? '中文': currentLang?.toUpperCase()}</div>
           /
-          <div onClick={()=>navigate(`/en${auto?`/${auto}`:''}`)} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
+          <div onClick={()=>navigate(`/en${auto?`/${auto}`:''}`, { state: {currentLang: lang}})} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
         </div>
 
-        {lang=='en' ? <Manual status={status}/>: <ManualNL status={status}/>}
+        {lang=='en' ? <Manual status={status}/>: (lang=='zh'? <ManualZH status={status}></ManualZH> : <ManualNL status={status}/>)}
         <div className='flex flex-col gap-[1rem] relative'>
           
           <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[0.6rem]'>
             <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-[rgba(255,255,255,0.6)]'>
               {!imageSrc? (
-                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: TITLE_NL}</div>
+                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: (lang=='zh'?TITLE_ZH: TITLE_NL)}</div>
               ):(
                 imageSrc.map((src, index)=><img key={index} src={src}/>)                          
               )}  
@@ -262,7 +277,7 @@ function DalleTest() {
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-[0.6rem] gap-[0.75rem]'>
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem] border-[rgba(255,255,255,0.6)]' 
-                      placeholder={lang=='en'? 'enter prompt...':"Voer prompts in..."}
+                      placeholder={lang=='en'? 'enter prompt...': ( lang=='zh'? "輸入提示...":"Voer prompts in...")}
                       rows={5}/>
             <button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}

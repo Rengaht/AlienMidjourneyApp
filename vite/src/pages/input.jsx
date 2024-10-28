@@ -1,13 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import '../App.css'
 import axios from 'axios';
-import { API_DALLE, API_DALLE_VARIATION, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL } from '../constants';
+import { API_DALLE, API_UPLOAD, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH } from '../constants';
 import Manual from '../comps/manual';
 import Album from '../comps/album';
 import { fetchToBlob, saveRecords, selectFile, uploadCloudinary, uploadStorage } from '../utils';
 import { gsap } from 'gsap';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ManualNL from '../comps/manualNL';
+import ManualZH from '../comps/manualZH';
+import { useLongPress } from 'use-long-press';
+
+
+const PRESSING_TIME=2000;
 
 gsap.registerPlugin(TextPlugin);
 
@@ -15,9 +20,12 @@ gsap.registerPlugin(TextPlugin);
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
 
 function Workshop() {
-  
+
   const {lang, auto}=useParams();
   const navigate=useNavigate();
+  const location=useLocation();
+  const currentLang=location.state?.currentLang || lang;
+  // console.log(currentLang, lang);
 
   const [status, setStatus]=useState();
   const [messageId, setMessageId]=useState();
@@ -25,6 +33,7 @@ function Workshop() {
   const [progress, setProgress]=useState();
   const [buttons, setButtons]=useState();
   const [autorun, setAutorun]=useState();
+  const [pressing, setPressing]=useState();
 
   const [selectDot, setSelectDot]=useState('left');
 
@@ -35,6 +44,19 @@ function Workshop() {
   const refTimeout=useRef();
   const refAuto=useRef();
   const refAlbum=useRef();
+
+  const bind = useLongPress(() => {
+    console.log('Long pressed!');
+    setPressing(()=>false);
+    upload();
+
+  },{
+    onStart: ()=>{ setPressing(()=>true); console.log('long press start');},
+    onFinish: ()=>{ setPressing(()=>false); console.log('long press finish')},
+    onCancel: ()=>{ setPressing(()=>false); console.log('long press cancel')},
+    threshold: PRESSING_TIME, 
+    captureEvent: true,
+  });
   
   const checkTimeout=()=>{
     
@@ -77,12 +99,15 @@ function Workshop() {
     switch(status){
       case STATUS.IDLE:
         if(lang=="nl") return "Genereren";
+        if(lang=='zh') return "開始生成";
         return "Generate";
       case STATUS.UPLOAD:
         if(lang=='nl') return 'Uploaden';
+        else if(lang=='zh') return '上傳圖片';
         return 'upload';
       case STATUS.UPLOADED:
         if(lang=='nl') return 'Geüpload';
+        else if(lang=='zh') return '成功上傳';
         return 'uploaded';
       case STATUS.BUTTONS:
         return "Waiting...";
@@ -90,6 +115,7 @@ function Workshop() {
       case STATUS.PROCESSING_GENERATE:
       default:
         if(lang=='nl') return <span className='loading'>Verwerking</span>;
+        else if(lang=='zh') return <span className='loading'>生成中</span>;
         return <span className='loading'>Processing</span>
     }
   }
@@ -165,18 +191,21 @@ function Workshop() {
 
     setStatus(STATUS.UPLOADED);
     
-    fetchToBlob(imageSrc).then(blob=>{
+    axios.post(API_UPLOAD,{
+      data: {
+        url:imageSrc,
+        folder: "workshop",
+        name: getFileName(),
+      }
+    }).then(res=>{
 
-      if(!blob) return;
-      console.log(blob.size, blob.type);
+        console.log(res.data);
+        let url=res.data.secure_url || res.data.url;
 
-      uploadCloudinary(blob, getFileName(), "workshop").then(res=>{
-        
-        // save record
 
-        saveRecords(refInput.current.value, res).then(()=>{
+        saveRecords(refInput.current.value, url, true).then(()=>{
             
-            console.log(res);
+            
             // selectFile({
             //     url: res,
             //     prompt: refInput.current.value,
@@ -189,7 +218,6 @@ function Workshop() {
             restart();
             },3000);
         });
-      });  
     });
     
   }
@@ -199,6 +227,7 @@ function Workshop() {
     setButtons();
     setMessageId();
     setImageSrc();
+    setPressing(false);
     refInput.current.value="";
 
     checkTimeout();
@@ -247,15 +276,15 @@ function Workshop() {
 
   return (
     <div className="main">
-        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":"Herstarten"}</button>        
+        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
         
         <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
-          <div onClick={()=>navigate(`/workshop/nl${auto?`/${auto}`:''}`)} className={`${lang=='nl'? 'underline':''} cursor-pointer`}>NL</div>
+          <div onClick={()=>navigate(`/workshop/${currentLang}${auto?`/${auto}`:''}`)} className={`${lang==currentLang? 'underline':''} cursor-pointer`}>{currentLang=='zh'? '中文': currentLang?.toUpperCase()}</div>
           /
-          <div onClick={()=>navigate(`/workshop/en${auto?`/${auto}`:''}`)} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
+          <div onClick={()=>navigate(`/workshop/en${auto?`/${auto}`:''}`, { state: {currentLang: lang}})} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
         </div>
 
-        {lang=='en' ? <Manual status={status}/>: <ManualNL status={status}/>}
+        {lang=='en' ? <Manual status={status}/>: (lang=='zh'? <ManualZH status={status}></ManualZH> : <ManualNL status={status}/>)}
         <div className='flex flex-col gap-[1rem] relative'>
         
             <section className='absolute w-full top-[-2rem] flex flex-row justify-center items-center gap-[1.5rem]'>
@@ -266,7 +295,7 @@ function Workshop() {
           <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[0.6rem]'>
             <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-[rgba(255,255,255,0.6)]'>
               {!imageSrc? (
-                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: TITLE_NL}</div>
+                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: (lang=='zh'? TITLE_ZH: TITLE_NL)}</div>
               ):(
                 imageSrc.map((src, index)=><img key={index} src={src}/>)                          
               )}  
@@ -274,11 +303,14 @@ function Workshop() {
           </div>
           <div className='w-full bg-back flex flex-col justify-center items-center p-[0.6rem] gap-[0.75rem]'>
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem] border-[rgba(255,255,255,0.6)]' 
-                      placeholder={lang=='en'? 'enter prompt...':"Voer prompts in..."}
+                      placeholder={lang=='en'? 'enter prompt...': ( lang=='zh'? "輸入提示...":"Voer prompts in...")}
                       rows={5}/>
-            <button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
+            { status==STATUS.UPLOAD?(
+              <button id="_main_button" className={`${pressing? 'pressing':'bg-gray'} cbutton`}
+                    {...bind()}>{getButtonText()}</button>
+            ):(<button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
-                    onClick={onSend}>{getButtonText()}</button>            
+                    onClick={onSend}>{getButtonText()}</button>)}
           </div>
         </div>
         <Album ref={refAlbum} tmp={imageSrc} lang={lang}  

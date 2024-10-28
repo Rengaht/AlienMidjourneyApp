@@ -111,7 +111,7 @@ const Single=()=>{
     return (
         <div className="bg-black absolute top-0 left-0 bottom-0 right-0">
             <div className="fixed flex flex-col py-[0.5rem] justify-between gap-[1.5rem] items-center" style={getStlye()}>
-                <img className="w-[37%]" src="/assets/scale_graphic.png"/>
+                <img className="w-[37vh]" src="/assets/scale_graphic.png"/>
                 <div className="w-full flex-1 flex justify-center items-center">
                     <div className="h-full aspect-square bg-center bg-cover bg-no-repeat rounded-full"
                         style={{backgroundImage:`url(${current?.url})`}}>
@@ -120,7 +120,7 @@ const Single=()=>{
                     </div>
                 </div>
                 <div>{current?.prompt}</div>
-                <img className="w-[46%]"  src="/assets/gradient_graphic.png"/>
+                <img className="w-[46vh]"  src="/assets/gradient_graphic.png"/>
             </div>
             <Leva hidden={!control}/>
         </div>

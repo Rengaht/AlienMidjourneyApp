@@ -54,7 +54,7 @@ const ManualNL=({status, ...props})=>{
 
                 <p>Je kunt de innerlijke aliens van anderen bekijken in het innerlijke aliens-archief aan de rechterkant.</p>
 
-                <Pagination page={2} total={3}/>
+                <Pagination page={1} total={2}/>
             </div>
         );
     }

@@ -8,6 +8,8 @@ export const API_DALLE='https://us-central1-alienmidjourneyapp.cloudfunctions.ne
 // export const API_DALLE='http://127.0.0.1:5001/alienmidjourneyapp/us-central1/dalle'
 export const API_DALLE_VARIATION='https://us-central1-alienmidjourneyapp.cloudfunctions.net/dalleVariation';
 
+export const API_UPLOAD='https://us-central1-alienmidjourneyapp.cloudfunctions.net/uploadImage';
+// export const API_UPLOAD='http://127.0.0.1:5001/alienmidjourneyapp/us-central1/uploadImage';
 
 export const STATUS={
     IDLE:'__idle',
@@ -22,6 +24,7 @@ export const STATUS={
 
 export const TITLE='Prompt Your Inner Aliens';
 export const TITLE_NL='Prompt Je Inner Aliens';
+export const TITLE_ZH='詠唱你的內在外星人';
 
 export const CHECK_INTERVAL=6000;
 

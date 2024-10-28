@@ -231,9 +231,9 @@ function selectListener(callback, workshop){
     }
 }
 
-async function saveRecords(prompt, url){
+async function saveRecords(prompt, url, workshop){
     console.log('save record', prompt);
-    const docRef = doc(datastore, "records", new Date().getTime().toString());
+    const docRef = doc(datastore, workshop? "workshops":"records", new Date().getTime().toString());
     let res=await setDoc(docRef, {
         prompt: prompt,
         url: url,
@@ -242,8 +242,8 @@ async function saveRecords(prompt, url){
     console.log('save record', res);
 }
 
-function getRecords(callback){
-    const starCountRef = collection(datastore, 'records');
+function getRecords(callback, workshop){
+    const starCountRef = collection(datastore, workshop? 'workshops':'records');
     onSnapshot(starCountRef, (snapshot) => {
         
         let output=[];

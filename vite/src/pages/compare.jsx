@@ -36,7 +36,7 @@ const Compare=()=>{
     
     return (
         <div className="bg-black absolute top-0 left-0 bottom-0 right-0 flex flex-col py-[0.5rem] justify-between gap-[1.5rem] items-center">
-                <img className="w-[37%]" src="/assets/scale_graphic.png"/>
+                <img className="w-[37vh]" src="/assets/scale_graphic.png"/>
                 <div className="w-full flex-1 flex flex-row">
                     <div className="flex-1 flex flex-col gap-[1rem] justify-start items-center">
                         <div className="w-[75vh] aspect-square bg-center bg-cover bg-no-repeat rounded-full"
@@ -51,7 +51,7 @@ const Compare=()=>{
                         <div>{currentRight?.prompt}</div>
                     </div>                    
                 </div>
-                <img className="w-[46%]"  src="/assets/gradient_graphic.png"/>
+                <img className="w-[46vh]"  src="/assets/gradient_graphic.png"/>
             
         </div>
         

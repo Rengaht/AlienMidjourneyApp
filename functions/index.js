@@ -5,9 +5,10 @@ const FormData = require('form-data');
 const busboy = require('busboy');
 const { tmpdir } = require('os');
 const { join } = require('path');
-const { createReadStream, writeFileSync } = require('fs');
+const { createReadStream, writeFileSync, read } = require('fs');
 const { defineString } = require('firebase-functions/params');
-
+const cloudinary = require('cloudinary').v2;
+const { Blob } = require('buffer');
 
 // admin.initializeApp();
 
@@ -29,12 +30,20 @@ const DALLE_URL='https://api.openai.com/v1/images/generations';
 const DALLE_VARIATION_URL='https://api.openai.com/v1/images/variations';
 const OPENAI_KEY=defineString('OPENAI_KEY');
 
+const CLOUDINARY_API_KEY='158212226222688';
+const CLOUDINARY_API_SECRET='kwf1cLaFewvAuvJ8CqVl2P7R1Hc';
 
 const headers={
     "Content-Type": "application/json",
     "Authorization": `Bearer ${API_TOKEN}`,
     'ngrok-skip-browser-warning':true,
   };
+
+cloudinary.config({ 
+    cloud_name: 'fuyuanmuseum', 
+    api_key: CLOUDINARY_API_KEY, 
+    api_secret: CLOUDINARY_API_SECRET,
+});
 
 
 exports.imagine = functions.runWith(runtimeOpts).https.onRequest(
@@ -131,11 +140,116 @@ exports.dalle=functions.runWith(runtimeOpts).https.onRequest(
                 const response = await axios(config);
                 let output=response.data;
                 console.log(output);
+
                 
                 res.send(output);
 
             }catch(err){
                 console.log(err.message);
+                res.send(err);
+            }
+        });
+    }
+)
+
+async function blobToBase64wo(blob) {
+    // Convert Blob to Buffer
+    const buffer = await blob.arrayBuffer();
+    const base64 = Buffer.from(buffer).toString('base64');
+    
+    const dataUriPrefix = 'data:image/png;base64,';
+    // Return as Data URI
+    return `${dataUriPrefix}${base64}`;
+}
+
+async function toDataURL_node(url) {
+    let response = await fetch(url);
+    let blob = await response.blob();
+    // let buffer = Buffer.from(await blob.arrayBuffer());
+    // return "data:" + contentType + ';base64,' + buffer.toString('base64');
+
+   return await blobToBase64(blob);
+
+}
+
+exports.uploadImage=functions.runWith(runtimeOpts).https.onRequest(
+    async(req, res)=>{
+        cors(req, res, async ()=>{     
+            
+            try{
+             
+                const data = req.body.data;
+                console.log(data);
+                if(!data) return res.status(400).send('No data');
+
+                let img=data.url[0];
+
+                // const file_response = await axios({
+                //     url: data.url[0],
+                //     method: 'GET',
+                //     responseType: 'blob',
+                // });
+                // const file_response=await fetch(data.url[0]);
+                // const blob=await file_response.arrayBuffer();
+                // console.log(blob);
+                // const href = URL.createObjectURL(file_response.data);
+                // // const file_response=await fetch(data.url[0]);
+                // console.log(file_response);
+
+                // const reader = file_response.body.getReader();
+                // console.log(reader);
+
+                // let url='https://api.cloudinary.com/v1_1/fuyuanmuseum/image/upload';
+                
+                let url='https://upload.imagekit.io/api/v1/files/upload';
+
+                
+                // let file=await toDataURL_node(data.url[0]);
+                // console.log(file);
+
+                let formdata=new FormData();
+                formdata.append('file', img);
+                formdata.append('fileName', data.name);
+                formdata.append('publicKey', 'public_1Msrt3eCXF+08wE0KTIXd/hi4bc=');
+
+                const config = {
+                    method: "post",
+                    url: url,
+                    headers: {
+                        ...formdata.getHeaders(),
+                        Accept: 'application/json',
+                        Authorization: 'Basic cHJpdmF0ZV9sL1N6bzRRSjNQUVlLTWRSVHNqL0RGdzQ4clk9Og==',
+                    },
+                    data: formdata
+                };
+                
+                // console.log('send to dalle', config);
+
+                const upload_res = await axios(config);
+
+
+                // const upload_res=await cloudinary.uploader
+                //     .upload(file, {
+                //         resource_type: "image", 
+                //         upload_preset: data.folder || 'inneralien',
+                //         context: `alt=${data.name}`,
+                //     });
+
+                console.log('upload result', upload_res);
+                // .then(result=>console.log(result));
+
+                // let upload_res=await fetch(url, {
+                //     method: 'POST',
+                //     body: formdata,
+                // });
+                // console.log('Uploaded a blob or file!', upload_res.data);
+                
+                let res_data=upload_res.data;
+                console.log('upload result', res_data);
+                res.send(res_data);
+
+            }catch(err){
+                console.log(err.message, err);
                 res.send(err);
             }
         });
