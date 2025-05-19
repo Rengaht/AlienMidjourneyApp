@@ -171,7 +171,7 @@ function DalleTest() {
     axios.post(API_UPLOAD,{
       data: {
         url:imageSrc,
-        folder: "exhibition",
+        folder: "2025_MOCA_Exhibition",
         name: getFileName(),
       }
     }).then(res=>{

@@ -70,9 +70,9 @@ textarea{
 }
   .main{
       @apply fullscreen bg-[url('/assets/bg.png')];
-      @apply grid grid-cols-3 justify-center items-stretch gap-[1.2rem];
+      @apply grid md:grid-cols-3 grid-cols-1 justify-center items-stretch gap-[1.2rem];
       @apply px-[1.87rem] pt-[5.5rem] pb-[4rem];
-      @apply min-w-[1200px] h-[100vh];
+      @apply md:min-w-[1200px] h-[100vh];
   }
   @media screen and (min-width:1920px){
     .main{
@@ -82,7 +82,7 @@ textarea{
   }
   #root{
     overflow-x: auto;
-    @apply absolute top-0 left-0 right-0 bottom-0;
+    @apply absolute top-0 left-0 right-0 bottom-0 overflow-y-auto md:overflow-y-hidden;
   }
 
   .side{
@@ -90,6 +90,7 @@ textarea{
   }
   .container{
     @apply relative px-[1rem] py-[0.8rem] overflow-y-auto flex flex-col gap-[0.5rem];
+    @apply min-h-[50vh] md:min-h-[unset];
   }
 
   .hint{
