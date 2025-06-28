@@ -74,6 +74,9 @@ textarea{
       @apply px-[1.87rem] pt-[5.5rem] pb-[4rem];
       @apply min-w-[1200px] h-[100vh];
   }
+  .main.v2{
+    @apply bg-[url('/assets/background.png')];
+  }
   @media screen and (min-width:1920px){
     .main{
         @apply gap-[4rem];
@@ -187,5 +190,22 @@ textarea{
       background-position: 0 0, 100% 0;
     }
   }
-;
+
+  .main.v2{
+    @apply gap-[1.13rem];
+  }
+  .container.v2{
+    @apply justify-between !text-white pb-[2rem];
+  }
+  .container.v2>section{
+    @apply flex flex-col gap-[0.37rem];
+  }
+  .container.v2>section>h4{
+    @apply text-[1rem] font-bold;
+  }
+  .container.v2>section>textarea{
+    @apply resize-none text-[0.75rem] px-[0.69rem] py-[0.62rem];
+    @apply bg-transparent border-[1px] border-white;
+
+  }
 } 

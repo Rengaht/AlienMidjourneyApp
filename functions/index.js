@@ -212,7 +212,7 @@ exports.uploadImage=functions.runWith(runtimeOpts).https.onRequest(
                 formdata.append('fileName', data.name);
                 formdata.append('publicKey', 'public_1Msrt3eCXF+08wE0KTIXd/hi4bc=');
                 formdata.append('folder', `${data.folder}/`);
-                formdata.append('customMetadata', `${JSON.stringify({prompt: data.name})}`);
+                // formdata.append('customMetadata', `${JSON.stringify({prompt: data.name})}`);
 
                 const config = {
                     method: "post",

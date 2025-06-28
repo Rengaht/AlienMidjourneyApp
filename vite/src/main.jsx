@@ -13,6 +13,7 @@ import {
 import Workshop from './pages/input.jsx'
 import Compare from './pages/compare.jsx'
 import Single from './pages/single.jsx'
+import DalleV2 from './Dalle_v2.jsx'
 
 
 const router = createBrowserRouter([
@@ -27,6 +28,14 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/en"/>,
+  },
+  {
+    path: "/v2/:lang/:auto?",
+    element: <DalleV2/>,
+  },
+  {
+    path: "/v2",
+    element: <DalleV2/>,
   },
   {
     path: "/display",

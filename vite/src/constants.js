@@ -31,3 +31,7 @@ export const CHECK_INTERVAL=6000;
 export const BUCKET_URL='https://firebasestorage.googleapis.com/v0/b/';
 
 export const IDEL_TIMEOUT=10000;
+
+
+
+export const API_UPLOAD_AWS='https://us-central1-alienmidjourneyapp.cloudfunctions.net/uploadImageAWS';
