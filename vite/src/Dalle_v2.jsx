@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_DALLE, API_UPLOAD, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH } from './constants';
+import { API_DALLE, API_UPLOAD, API_UPLOAD_AWS, FOLDER_MOCA, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH, URL_AWS_BUCKET } from './constants';
 import Manual from './comps/manual';
 import Album from './comps/albumV2';
 import Template, { ButtonTemplate } from './comps/template';
@@ -182,18 +182,22 @@ function DalleV2() {
     if(!imageSrc) return;
 
     setStatus(STATUS.UPLOADED);
-    
-    axios.post(API_UPLOAD,{
-      data: {
-        url:imageSrc,
-        folder: "exhibition",
+
+  
+
+    // axios.post(API_AWS_UPLOAD, {
+    axios.post(API_UPLOAD, {
+      data:{
+        url: imageSrc,
+        folder: FOLDER_MOCA,
         name: getFileName(),
       }
-    }).then(res=>{
-
+    })
+      .then(res=>{
+    
         console.log(res.data);
         let url=res.data.secure_url || res.data.url;
-
+        // let url=`${URL_AWS_BUCKET}${FOLDER_MOCA}/${getFileName()}.png`;
         
         let prompt=getPrompt();
 
@@ -211,6 +215,7 @@ function DalleV2() {
             // setStatus(val=>STATUS.IDLE);
             restart();
           },3000);
+
         });
     }).catch(err=>{
       console.log(err);
@@ -283,7 +288,7 @@ function DalleV2() {
         </div>
 
         {lang=='zh' ? <ManualZHV2 status={status} onSend={onSend}/>
-          : <ManualV2 status={status}></ManualV2>}
+          : <ManualV2 status={status} onSend={onSend}></ManualV2>}
 
         <div className='flex flex-col gap-[1rem] justify-center items-center relative'>
           

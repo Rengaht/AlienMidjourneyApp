@@ -32,6 +32,8 @@ const OPENAI_KEY=defineString('OPENAI_KEY');
 
 const CLOUDINARY_API_KEY='158212226222688';
 const CLOUDINARY_API_SECRET='kwf1cLaFewvAuvJ8CqVl2P7R1Hc';
+const API_UPLOAD_AWS='https://6ukum0hob0.execute-api.ap-northeast-1.amazonaws.com/dev/theinneralien2025/';
+
 
 const headers={
     "Content-Type": "application/json",
@@ -352,6 +354,65 @@ exports.dalleVariation=functions.runWith(runtimeOpts).https.onRequest(
         
             }catch(err){
                 console.log(err);
+                res.send(err);
+            }
+        });
+    }
+)
+
+
+exports.uploadS3=functions.runWith(runtimeOpts).https.onRequest(
+    async(req, res)=>{
+        cors(req, res, async ()=>{
+            try{
+                const data = req.body.data;
+                console.log(data);
+                if(!data) return res.status(400).send('No data');
+
+                
+                // let response = await fetch(data.url[0]);
+                // const arrayBuffer = await response.arrayBuffer();  
+                
+                const axiosResponse = await axios({
+                    url: data.url[0], //your url
+                    method: "GET",
+                    responseType: "arraybuffer",
+                  });
+                const arrayBuffer = axiosResponse.data;
+                
+
+                const headers=new Headers();
+                headers.append('Content-Type', 'image/png');
+
+                const requestOptions = {
+                    method: 'PUT',
+                    headers: headers,
+                    body: arrayBuffer,
+                };
+                const upload_res=await fetch(`${API_UPLOAD_AWS}${data.folder}/${data.name}.png`, 
+                    requestOptions);
+
+                
+                // let config = {
+                //     method: 'put',
+                //     maxBodyLength: Infinity,
+                //     url: `${API_UPLOAD_AWS}${data.folder}/${data.name}.png`,
+                //     headers: { 
+                //       'Content-Type': 'image/png'
+                //     },
+                //     data : formdata
+                // };
+                // const upload_res = await axios(config);
+
+                console.log('upload result', upload_res.data);
+                
+                res.send({
+                    ...upload_res.data,
+                    url: `${data.folder}/${data.name}.png`
+                });
+
+            }catch(err){
+                console.log(err.message, err);
                 res.send(err);
             }
         });
