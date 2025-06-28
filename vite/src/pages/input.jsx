@@ -10,6 +10,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import ManualNL from '../comps/manualNL';
 import ManualZH from '../comps/manualZH';
 import { useLongPress } from 'use-long-press';
+import { isMobile } from 'react-device-detect';
 
 
 const PRESSING_TIME=2000;
@@ -194,7 +195,7 @@ function Workshop() {
     axios.post(API_UPLOAD,{
       data: {
         url:imageSrc,
-        folder: "workshop",
+        folder: "2025_MOCA_Workshop",
         name: getFileName(),
       }
     }).then(res=>{
@@ -267,6 +268,7 @@ function Workshop() {
     
 
     restart();
+    console.log('isMobile=', isMobile);
     // refInput.current.value=tmp_prompt;
     // setButtons(tmp_buttons);
     
@@ -284,7 +286,7 @@ function Workshop() {
           <div onClick={()=>navigate(`/workshop/en${auto?`/${auto}`:''}`, { state: {currentLang: lang}})} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
         </div>
 
-        {lang=='en' ? <Manual status={status}/>: (lang=='zh'? <ManualZH status={status}></ManualZH> : <ManualNL status={status}/>)}
+        {!isMobile && (lang=='en' ? <Manual status={status}/>: (lang=='zh'? <ManualZH status={status}></ManualZH> : <ManualNL status={status}/>))}
         <div className='flex flex-col gap-[1rem] relative'>
         
             <section className='absolute w-full top-[-2rem] flex flex-row justify-center items-center gap-[1.5rem]'>
