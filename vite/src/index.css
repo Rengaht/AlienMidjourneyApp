@@ -12,7 +12,7 @@ html{
 }
 @media screen and (min-width: 1920px) {
   html{
-    font-size: 18px;
+    font-size: 16px;
   }  
 }
 
@@ -196,16 +196,16 @@ textarea{
     @apply gap-[1.13rem];
   }
   .container.v2{
-    @apply justify-between !text-white pb-[2rem];
+    @apply gap-[1.94rem] !text-white pb-[2rem];
   }
   .container.v2>section{
     @apply flex flex-col gap-[0.37rem];
   }
   .container.v2>section>h4{
-    @apply text-[1rem] font-bold;
+    @apply text-[1rem] font-bold leading-[1.4375rem] tracking-[0.02rem];
   }
   .container.v2>section>textarea{
-    @apply resize-none text-[0.75rem] px-[0.69rem] py-[0.62rem];
+    @apply resize-none text-[0.75rem] tracking-[0.015rem] font-[500] px-[0.69rem] py-[0.62rem];
     @apply bg-transparent border-[1px] border-white;
 
   }
