@@ -86,6 +86,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
                 <h3 className="!self-start !text-left">{lang=='en'? 'Inner Alien Description':'內在外星人描述'}</h3>
                 <div className="flex-1 border-white border px-[0.75rem] py-[0.69rem] text-[0.75rem]">{select_prompt||''}</div>
             </div>
+            
         </div>
     )
 

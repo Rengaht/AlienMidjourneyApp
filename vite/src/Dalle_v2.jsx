@@ -223,13 +223,22 @@ function DalleV2() {
 
     
   }
-  
+  const clearInput=()=>{
+    for(var i=0;i<5;++i){
+      let el=document.querySelector(`#_answer_${i+1}`);
+      if(el) el.value='';
+    }
+  }
+
   const restart=()=>{
     setStatus(STATUS.IDLE);
     setButtons();
     setMessageId();
     setImageSrc();
     // refInput.current.value="";
+
+    clearInput();
+
 
     checkTimeout();
   }
@@ -277,9 +286,9 @@ function DalleV2() {
 
   return (
     <div className="main v2">
-        <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
+        <button className="absolute top-[3rem] left-[1.87rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
         
-        <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem] text-white'>
+        <div className='absolute top-[3rem] right-[1.87rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
         <div onClick={()=>navigate(`/v2/zh${auto?`/${auto}`:''}`)} 
             className={`${lang=='zh'? 'underline':''} cursor-pointer`}>中文</div>
           /
