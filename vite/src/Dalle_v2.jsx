@@ -279,7 +279,7 @@ function DalleV2() {
     <div className="main v2">
         <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
         
-        <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
+        <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem] text-white'>
         <div onClick={()=>navigate(`/v2/zh${auto?`/${auto}`:''}`)} 
             className={`${lang=='zh'? 'underline':''} cursor-pointer`}>中文</div>
           /
@@ -291,26 +291,28 @@ function DalleV2() {
           : <ManualV2 status={status} onSend={onSend}></ManualV2>}
 
         <div className='flex flex-col gap-[1rem] justify-center items-center relative'>
-          
+          <div className='flex-1'></div>
           <div className='w-full flex flex-col justify-center items-center gap-2 bg-back p-[0.6rem]'>
-            <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-[rgba(255,255,255,0.6)]'>
+            <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-white'>
               {!imageSrc? (
-                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: (lang=='zh'?TITLE_ZH: TITLE_NL)}</div>
+                <div className={`w-full whitespace-nowrap flex justify-center text-[1.625rem] font-bold text-white ${lang=='zh'&& 'tracking-[0.40625rem]'}`}>{lang=='en'? TITLE: (lang=='zh'?TITLE_ZH: TITLE_NL)}</div>
               ):(
                 imageSrc.map((src, index)=><img key={index} src={src}/>)                          
               )}  
             </div>          
           </div>
-          
+          <div className='flex-1 relative w-full'>
+            <div className='footer v2 text-white'>
+              Powered by DALL·E
+            </div>
+          </div>
         </div>
         <Album ref={refAlbum} tmp={imageSrc} lang={lang}  
           onSelect={()=>{
             setAutorun(false);
             if(status==STATUS.IDLE) checkTimeout();
           }}/>
-        <div className='footer'>
-          Powered by DALL·E
-        </div>
+        
     </div>
   )
 }

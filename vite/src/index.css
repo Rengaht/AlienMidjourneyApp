@@ -204,9 +204,18 @@ textarea{
   .container.v2>section>h4{
     @apply text-[1rem] font-bold;
   }
+  .container.v2.en>section>h4{
+    @apply text-[0.9375rem] font-bold;
+  }
   .container.v2>section>textarea{
     @apply resize-none text-[0.75rem] px-[0.69rem] py-[0.62rem];
     @apply bg-transparent border-[1px] border-white;
 
+  }
+  .footer.v2{
+    /* @apply flex justify-center items-center w-full; */
+    /* position: unset; */
+    @apply top-0;
+    height: 5.1875rem;
   }
 } 

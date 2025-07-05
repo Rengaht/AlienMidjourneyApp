@@ -51,7 +51,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
     }));
 
     return (
-        <div ref={ref} className="flex flex-col gap-[0.56rem]">
+        <div ref={ref} className="flex flex-col gap-[0.56rem] text-white">
             <div className="side container">
                 <h3 className="!self-start !text-left">{lang=='en'? 'Inner Aliens Archive':(lang=='zh'?'內在外星人資料庫':'Inner Aliens Archief')}</h3>
                 {/* <button onClick={downalodFiles}>downlaod</button> */}

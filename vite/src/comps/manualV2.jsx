@@ -44,7 +44,7 @@ const getButtonText=(status, lang)=>{
 export const ManualV2=({status, onSend})=>{
 
     return (
-        <div className={__style}>
+        <div className={`${__style} en`}>
             <section>
                 <h3 className="text-[1.25rem]">How would you describe your inner alien?</h3>
                 <p className="text-[0.75rem]">After listening to the guided meditation, please respond to the following questions and click the “Generate” button to create your inner alien.
@@ -105,7 +105,7 @@ export const ManualZHV2=({status, onSend})=>{
             </section>
 
             <section>
-                <h4>3. 你的內在外星人有什麼行為或是怎麼移動的呢</h4>
+                <h4>3. 你的內在外星人有什麼行為或是怎麼移動的呢？</h4>
                 <textarea id="_answer_3" placeholder="輸入你的想法..."></textarea>
             </section>
 
