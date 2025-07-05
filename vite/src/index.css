@@ -61,7 +61,7 @@ ul{
 .cbutton{
   @apply bg-lightgray text-black uppercase flex flex-row justify-center items-center text-center;
   @apply text-[0.75rem] font-bold;
-  @apply rounded-[0.3125rem] px-[1.94rem] py-[0.3rem];
+  @apply rounded-[0.3125rem] px-[1.19rem] py-[0.3rem];
   
 }
 textarea{

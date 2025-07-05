@@ -288,7 +288,7 @@ function DalleV2() {
     <div className="main v2">
         <button className="absolute top-[3rem] left-[1.87rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
         
-        <div className='absolute top-[3rem] right-[1.87rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
+        <div className='absolute top-[3rem] right-[1.87rem] flex flex-row gap-[4px] font-bold text-[1rem] text-white'>
         <div onClick={()=>navigate(`/v2/zh${auto?`/${auto}`:''}`)} 
             className={`${lang=='zh'? 'underline':''} cursor-pointer`}>中文</div>
           /

@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, listAll, getDownloadURL, deleteObject} from "firebase/storage";
 import { getDatabase, ref as db_ref, set, onValue  } from "firebase/database";
-import { getFirestore, collection, doc, addDoc, onSnapshot, setDoc} from "firebase/firestore";
+import { getFirestore, collection, doc, addDoc, onSnapshot, setDoc, query, limit, orderBy} from "firebase/firestore";
 
 import Moment from "moment";
 import { saveAs } from 'file-saver';
@@ -243,12 +243,15 @@ async function saveRecords(prompt, url, workshop){
 }
 
 function getRecords(callback, workshop){
-    const starCountRef = collection(datastore, workshop? 'workshops':'records');
+    // const starCountRef = collection(datastore, workshop? 'workshops':'records');
+
+    const starCountRef = query(collection(datastore, workshop? 'workshops':'records'),orderBy('time', "desc"), limit(300));
     onSnapshot(starCountRef, (snapshot) => {
         
         let output=[];
         snapshot.forEach((doc) => {
-            output.unshift(doc.data());
+            // output.unshift(doc.data());
+            output.push(doc.data());
         });
         console.log('records updated', output);
 
