@@ -36,5 +36,9 @@ export const IDEL_TIMEOUT=10000;
 
 export const API_UPLOAD_AWS='https://us-central1-alienmidjourneyapp.cloudfunctions.net/uploadS3';
 export const FOLDER_MOCA='2025_MOCA_Exhibition';
-export const FOLDER_MOCA_WORKSHOP='2025MOCA_Workshop';
+export const FOLDER_MOCA_WORKSHOP='2025_MOCA_Workshop';
+
+export const FOLDER_MACAO='2025_MACAO_Exhibition';
+export const FOLDER_MACAO_WORKSHOP='2025_MACAO_Workshop';
+
 export const URL_AWS_BUCKET='https://theinneralien.s3.ap-northeast-1.amazonaws.com/2025MOCA/';

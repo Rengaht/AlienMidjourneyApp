@@ -64,17 +64,17 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
                                                     onClick={()=>{
                                                         setSelect(url);
                                                         
-                                                        if(workshop){
+                                                        // if(workshop || selectDot){
                                                             selectFile({
                                                                 url: url,
                                                                 prompt: prompt
                                                             }, selectDot);
-                                                        }else{
-                                                            selectFile({
-                                                                url: url,
-                                                                prompt: prompt
-                                                            });
-                                                        }
+                                                        // }else{
+                                                        //     selectFile({
+                                                        //         url: url,
+                                                        //         prompt: prompt
+                                                        //     });
+                                                        // }
                                                         onSelect();
                                                     }} 
                                                     src={url}/>)}                    

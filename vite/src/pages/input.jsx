@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import '../App.css'
 import axios from 'axios';
-import { API_DALLE, API_UPLOAD, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH } from '../constants';
+import { API_DALLE, API_UPLOAD, FOLDER_MOCA_WORKSHOP, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH } from '../constants';
 import Manual from '../comps/manual';
 import Album from '../comps/album';
 import { fetchToBlob, saveRecords, selectFile, uploadCloudinary, uploadStorage } from '../utils';
@@ -20,7 +20,7 @@ gsap.registerPlugin(TextPlugin);
 // const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
 
-function Workshop() {
+function Workshop({...props}) {
 
   const {lang, auto}=useParams();
   const navigate=useNavigate();
@@ -195,7 +195,7 @@ function Workshop() {
     axios.post(API_UPLOAD,{
       data: {
         url:imageSrc,
-        folder: "2025_MOCA_Workshop",
+        folder: props.folder,
         name: getFileName(),
       }
     }).then(res=>{
@@ -281,9 +281,11 @@ function Workshop() {
         <button className="absolute top-[3rem] left-[2.88rem] cbutton" onClick={restart}>{lang=="en"? "restart":( lang=='zh'?'重新整理':"Herstarten")}</button>        
         
         <div className='absolute top-[3rem] right-[2.88rem] flex flex-row gap-[4px] font-bold text-[1rem]'>
-          <div onClick={()=>navigate(`/workshop/${currentLang}${auto?`/${auto}`:''}`)} className={`${lang==currentLang? 'underline':''} cursor-pointer`}>{currentLang=='zh'? '中文': currentLang?.toUpperCase()}</div>
+          <div onClick={()=>navigate(props?.folder==FOLDER_MOCA_WORKSHOP? `/workshop/zh`:'/workshop/macao/zh', { state: {currentLang: lang}})} 
+            className={`${lang=='zh'? 'underline':''} cursor-pointer`}>中文</div>
           /
-          <div onClick={()=>navigate(`/workshop/en${auto?`/${auto}`:''}`, { state: {currentLang: lang}})} className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
+          <div onClick={()=>navigate(props?.folder==FOLDER_MOCA_WORKSHOP? `/workshop/en`:'/workshop/macao/en', { state: {currentLang: lang}})} 
+              className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
         </div>
 
         {!isMobile && (lang=='en' ? <Manual status={status}/>: (lang=='zh'? <ManualZH status={status}></ManualZH> : <ManualNL status={status}/>))}
@@ -297,7 +299,7 @@ function Workshop() {
           <div className='w-full flex-1 flex flex-col justify-center items-stretch gap-2 bg-back p-[0.6rem]'>
             <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-[rgba(255,255,255,0.6)]'>
               {!imageSrc? (
-                <div className='w-full whitespace-nowrap flex justify-center text-[2rem] font-bold'>{lang=='en'? TITLE: (lang=='zh'? TITLE_ZH: TITLE_NL)}</div>
+                <div className={`w-full whitespace-nowrap flex justify-center ${lang=='en'? 'text-[1.5rem]':'text-[2rem]'} font-bold`}>{lang=='en'? TITLE: (lang=='zh'? TITLE_ZH: TITLE_NL)}</div>
               ):(
                 imageSrc.map((src, index)=><img key={index} src={src}/>)                          
               )}  
@@ -307,12 +309,13 @@ function Workshop() {
             <textarea disabled={status!=STATUS.IDLE} ref={refInput} className='w-full bg-transparent text-white font-bold text-[0.875rem] border-[rgba(255,255,255,0.6)]' 
                       placeholder={lang=='en'? 'enter prompt...': ( lang=='zh'? "輸入提示...":"Voer prompts in...")}
                       rows={5}/>
-            { status==STATUS.UPLOAD?(
+            {/* { status==STATUS.UPLOAD?(
               <button id="_main_button" className={`${pressing? 'pressing':'bg-gray'} cbutton`}
-                    {...bind()}>{getButtonText()}</button>
-            ):(<button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
+                    {...bind()}>{getButtonText()}</button> */}
+            {/* ): */}
+            <button id="_main_button" className={`${(status==STATUS.IDLE || status==STATUS.UPLOAD)? 'bg-green':'bg-gray'} cbutton`}
                     disabled={status!=STATUS.IDLE && status!=STATUS.UPLOAD}
-                    onClick={onSend}>{getButtonText()}</button>)}
+                    onClick={onSend}>{getButtonText()}</button>
           </div>
         </div>
         <Album ref={refAlbum} tmp={imageSrc} lang={lang}  

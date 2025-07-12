@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { selectListener } from "./utils";
 import { useControls, button, Leva } from 'leva'
+import { FOLDER_MOCA } from "./constants";
 
 const __tag="INNER_ALIEN_PARAMS_DISPLAY";
-const Display=()=>{
+const Display=({...props})=>{
+
     const reset=()=>{
         console.log('reset');
         localStorage.removeItem(__tag);
@@ -78,7 +80,7 @@ const Display=()=>{
         
         selectListener((data)=>{
             setCurrent(()=>data);
-        });
+        }, props.tag);
 
         document.addEventListener('keydown', function(event){
             // event.preventDefault();

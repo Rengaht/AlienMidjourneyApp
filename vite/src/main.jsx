@@ -14,6 +14,7 @@ import Workshop from './pages/input.jsx'
 import Compare from './pages/compare.jsx'
 import Single from './pages/single.jsx'
 import DalleV2 from './Dalle_v2.jsx'
+import { FOLDER_MACAO, FOLDER_MACAO_WORKSHOP, FOLDER_MOCA, FOLDER_MOCA_WORKSHOP } from './constants.js'
 
 
 const router = createBrowserRouter([
@@ -30,8 +31,12 @@ const router = createBrowserRouter([
     element: <Navigate to="/en"/>,
   },
   {
-    path: "/v2/:lang/:auto?",
-    element: <DalleV2/>,
+    path: "/v2/:lang",
+    element: <DalleV2 folder={FOLDER_MOCA}/>,
+  },
+  {
+    path: "/macao/:lang",
+    element: <DalleV2 folder={FOLDER_MACAO}/>,
   },
   {
     path: "/v2",
@@ -42,8 +47,12 @@ const router = createBrowserRouter([
     element: <Display/>,
   },
   {
+    path: "/display/macao",
+    element: <Display tag="MACAO"/>,
+  },
+  {
     path:"/workshop/:lang",
-    element:<Workshop/> 
+    element:<Workshop folder={FOLDER_MOCA_WORKSHOP}/> 
   },
   {
     path:"/workshop",
@@ -55,6 +64,10 @@ const router = createBrowserRouter([
   },{
     path:'/workshop/display/:index',
     element:<Single/>
+  },
+  {
+    path:"/workshop/macao/:lang",
+    element:<Workshop folder={FOLDER_MACAO_WORKSHOP}/> 
   }
 ]);
 

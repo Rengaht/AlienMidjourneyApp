@@ -15,7 +15,8 @@ gsap.registerPlugin(TextPlugin);
 // const tmp_prompt="a cyberpunk giant mont blanc dessert store on Mars, in western black-white comic style";
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
 
-function DalleV2() {
+function DalleV2({...props}) {
+  // console.log(props);
   
   const {lang, auto}=useParams();
   const navigate=useNavigate();
@@ -189,7 +190,7 @@ function DalleV2() {
     axios.post(API_UPLOAD, {
       data:{
         url: imageSrc,
-        folder: FOLDER_MOCA,
+        folder: props.folder,
         name: getFileName(),
       }
     })
@@ -207,7 +208,7 @@ function DalleV2() {
           selectFile({
               url: url,
               prompt: prompt,
-          });
+          }, props.folder==FOLDER_MOCA?null: 'MACAO');
           refAlbum.current.scrollTop=0;
 
           setTimeout(()=>{
@@ -217,6 +218,7 @@ function DalleV2() {
           },3000);
 
         });
+
     }).catch(err=>{
       console.log(err);
     });
@@ -289,10 +291,10 @@ function DalleV2() {
         <button className="absolute top-[3rem] left-[1.87rem] cbutton" onClick={restart}>{lang=="zh"? '重新整理':"restart"}</button>        
         
         <div className='absolute top-[3rem] right-[1.87rem] flex flex-row gap-[4px] font-bold text-[1rem] text-white'>
-        <div onClick={()=>navigate(`/v2/zh${auto?`/${auto}`:''}`)} 
+        <div onClick={()=>navigate(props?.folder==FOLDER_MOCA? `/v2/zh`:'/macao/zh', { state: {currentLang: lang}})} 
             className={`${lang=='zh'? 'underline':''} cursor-pointer`}>中文</div>
           /
-          <div onClick={()=>navigate(`/v2/en${auto?`/${auto}`:''}`, { state: {currentLang: lang}})} 
+          <div onClick={()=>navigate(props?.folder==FOLDER_MOCA? `/v2/en`:'/macao/en', { state: {currentLang: lang}})} 
               className={`${lang=='en'? 'underline':''} cursor-pointer`}>EN</div>
         </div>
 
@@ -304,7 +306,7 @@ function DalleV2() {
           <div className='w-full flex flex-col justify-center items-center gap-2 bg-back p-[0.6rem]'>
             <div className='w-full aspect-square flex justify-center items-center border-[1.5px] border-white'>
               {!imageSrc? (
-                <div className={`w-full whitespace-nowrap flex justify-center text-[1.625rem] font-bold text-white ${lang=='zh'&& 'tracking-[0.40625rem]'}`}>{lang=='en'? TITLE: (lang=='zh'?TITLE_ZH: TITLE_NL)}</div>
+                <div className={`w-full whitespace-nowrap flex justify-center text-[1.625rem] font-bold text-white ${lang=='zh'&& 'tracking-[0.40625rem]'}`}>{lang=='zh'?TITLE_ZH: TITLE}</div>
               ):(
                 imageSrc.map((src, index)=><img key={index} src={src}/>)                          
               )}  
@@ -320,7 +322,8 @@ function DalleV2() {
           onSelect={()=>{
             setAutorun(false);
             if(status==STATUS.IDLE) checkTimeout();
-          }}/>
+          }}
+          selectDot={props.folder==FOLDER_MOCA?null:'MACAO'}/>
         
     </div>
   )

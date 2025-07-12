@@ -197,7 +197,7 @@ async function downalodFiles(){
 }
 
 async function selectFile(record, workshop){
-    console.log('select file', record);
+    console.log('select file', record,workshop);
     // set(db_ref(database, 'current'), {
     //   url: file,
     // });
@@ -243,18 +243,21 @@ async function saveRecords(prompt, url, workshop){
 }
 
 function getRecords(callback, workshop){
-    // const starCountRef = collection(datastore, workshop? 'workshops':'records');
-
-    const starCountRef = query(collection(datastore, workshop? 'workshops':'records'),orderBy('time', "desc"), limit(300));
+    const starCountRef = collection(datastore, workshop? 'workshops':'records');
+    const MAX_COUNT=300;
+    // const starCountRef = query(collection(datastore, workshop? 'workshops':'records'),orderBy('time', "desc"), limit(300));
     onSnapshot(starCountRef, (snapshot) => {
         
         let output=[];
-        snapshot.forEach((doc) => {
-            // output.unshift(doc.data());
-            output.push(doc.data());
+        snapshot.forEach((doc) => {        
+            output.unshift(doc.data());
+            if(output.length>MAX_COUNT){
+                output.pop();
+            }
+            // output.push(doc.data());
         });
         console.log('records updated', output);
-
+        
         callback(output);
     });
 }
