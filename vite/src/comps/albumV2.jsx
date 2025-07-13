@@ -3,6 +3,8 @@ import { downalodFiles, getRecords, listFiles, selectFile, selectListener } from
 
 const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)=>{
 
+    console.log(selectDot, 'selectDot');
+    
     const [files, setFiles]=useState();
     const [select, setSelect]=useState();
     const [select_prompt, setSelectPrompt]=useState();
@@ -34,7 +36,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
         selectListener((data=>{
             setSelect(()=>data?.url);
             setSelectPrompt(()=>data?.prompt);
-        }));
+        }), selectDot);
     },[]);
 
     useImperativeHandle(ref, ()=>({
@@ -46,7 +48,7 @@ const Album=forwardRef(({tmp,lang,onSelect, workshop, selectDot, ...props}, ref)
             let next=files[next_index];
             console.log('current index', index, 'goto', next_index);
             setSelect(next);
-            selectFile(next);
+            selectFile(next, selectDot);
         }
     }));
 

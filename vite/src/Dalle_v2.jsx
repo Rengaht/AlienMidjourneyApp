@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './App.css'
 import axios from 'axios';
-import { API_DALLE, API_UPLOAD, API_UPLOAD_AWS, FOLDER_MOCA, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH, URL_AWS_BUCKET } from './constants';
+import { API_DALLE, API_UPLOAD, API_UPLOAD_AWS, FOLDER_MACAO, FOLDER_MOCA, IDEL_TIMEOUT, STATUS, TITLE, TITLE_NL, TITLE_ZH, URL_AWS_BUCKET } from './constants';
 import Manual from './comps/manual';
 import Album from './comps/albumV2';
 import Template, { ButtonTemplate } from './comps/template';
@@ -16,7 +16,7 @@ gsap.registerPlugin(TextPlugin);
 // const tmp_buttons=['V1','V1','V1','V1','V1','V1','V1','V1','V1'];
 
 function DalleV2({...props}) {
-  // console.log(props);
+  console.log(props);
   
   const {lang, auto}=useParams();
   const navigate=useNavigate();
@@ -208,7 +208,7 @@ function DalleV2({...props}) {
           selectFile({
               url: url,
               prompt: prompt,
-          }, props.folder==FOLDER_MOCA?null: 'MACAO');
+          }, props.folder==FOLDER_MACAO?'MACAO':null);
           refAlbum.current.scrollTop=0;
 
           setTimeout(()=>{
@@ -323,7 +323,7 @@ function DalleV2({...props}) {
             setAutorun(false);
             if(status==STATUS.IDLE) checkTimeout();
           }}
-          selectDot={props.folder==FOLDER_MOCA?null:'MACAO'}/>
+          selectDot={props.folder==FOLDER_MACAO?'MACAO':null}/>
         
     </div>
   )

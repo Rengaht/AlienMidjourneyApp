@@ -40,7 +40,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/v2",
-    element: <DalleV2/>,
+    element: <DalleV2 folder={FOLDER_MOCA}/>,
   },
   {
     path: "/display",
